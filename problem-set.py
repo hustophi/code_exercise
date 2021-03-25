@@ -3,7 +3,7 @@
 #若无环，那么fast或fast.next必然先到达链表末尾None;
 #否则,slow进入环前,fast已进入环，当slow遍历环中所有节点时,fast与slow必然会相遇
 #时间复杂度O(n),空间复杂度O(1),following is code:
-##################################################
+###################################################
 # class ListNode:
 #     def __init__(self, x):
 #         self.val = x
@@ -27,3 +27,14 @@ class Solution:
             flag = False
         return flag
 ###################################################
+#Fibinacci数列非递归
+#每次记录并更新两个值(当前值及其前一个),following is code:
+###################################################
+class Solution:
+    def Fibonacci(self, n):
+        zero,one=0,1
+        for _ in range(n):
+            zero,one=one,zero+one
+        return zero
+        
+        
