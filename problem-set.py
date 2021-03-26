@@ -28,7 +28,7 @@ class Solution:
         return flag
 ###################################################
 #Fibinacci数列非递归
-#每次记录并更新两个值(当前值及其前一个),following is code:
+#每次记录并更新两个值(当前值及其前一个,类似于动态规划),following is code:
 ###################################################
 class Solution:
     def Fibonacci(self, n):
