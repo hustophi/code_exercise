@@ -36,5 +36,29 @@ class Solution:
         for _ in range(n):
             zero,one=one,zero+one
         return zero
-        
+###################################################
+#给定一个m x n大小的矩阵（m行，n列），按螺旋的顺序返回矩阵中的所有元素。
+# @param matrix int整型二维数组 
+# @return int整型一维数组
+#可利用递归，重点在于判断矩阵行列的奇偶性
+class Solution:
+    def spiralOrder(self , matrix ):
+        if not matrix:
+            return []
+        else:
+            return spiralHelp(matrix,0,len(matrix)-1,len(matrix[0])-1,[])
+def spiralHelp(matrix,start,m,n,li):
+    if start <= n and start <= m:
+        for col in range(start,n+1):
+            li.append(matrix[start][col])
+        for row in range(start+1,m+1):
+            li.append(matrix[row][n])
+        for col in range(n-1,start-1,-1):
+            if start != m:                     #若无此判断,奇*奇阶矩阵不满足,即会重复便利,下同
+                li.append(matrix[m][col])
+        for row in range(m-1,start,-1):
+            if start != n:                     #若无此判断,奇*偶阶矩阵不满足
+                li.append(matrix[row][start])
+        spiralHelp(matrix,start+1,m-1,n-1,li)
+    return li
         
