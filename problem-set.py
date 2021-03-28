@@ -61,4 +61,18 @@ def spiralHelp(matrix,start,m,n,li):
                 li.append(matrix[row][start])
         spiralHelp(matrix,start+1,m-1,n-1,li)
     return li
-        
+###################################################
+#假设你有一个数组，其中第 i 个元素是股票在第 i 天的价格。
+#你有一次买入和卖出的机会。（只有买入了股票以后才能卖出）,计算可以获得的最大收益。 
+# @param prices int整型一维数组 
+# @return int整型
+class Solution:
+    def maxProfit(self , prices ):
+        maxprofit = 0
+        dp = 0                                       #dp记为第i天卖出所获最大收益,因为dp[i]只可能使用了上一时刻的dp[i-1],而且ans可以在dp生成过程中算出来,所以没必要把dp开成数组
+        for i in range(1,len(prices)):
+            dp = max(dp, 0) + prices[i]-prices[i-1]  #则dp[i+1]=max(prices[i+1]-prices[i]+dp[i],prices[i+1]-prices[i])
+            if dp > maxprofit:
+                maxprofit = dp
+        return maxprofit
+###################################################    
