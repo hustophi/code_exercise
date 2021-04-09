@@ -76,3 +76,20 @@ class Solution:
                 maxprofit = dp
         return maxprofit
 ###################################################    
+#计算给定n个数，在它们中间添加"+"， "*"， "("， ")"符号，能够获得的最大值。
+#动态规划：对数字进行分组，例如n==4时，依次计算两个数字一组，三个数字一组，四个数字一组的最大值
+#注意到计算三个数字一组的情况用到了两个数字一组的最大值，据此可以考虑用动态规划并写出转移方程
+while True:
+    try:
+        nums = list(map(int, input().split()))
+        N = len(nums)
+        dp = [[nums[i] if i==j else 0 for j in range(N)] for i in range(N)] # dp[i][j] 第i个数到第j个数的最大
+        for r in range(2,N+1):          #对数字进行分组
+            for i in range(N-r+1):
+                j = i+r-1
+                for k in range(i,j):        #在第k个数后断开
+                    dp[i][j] = max(dp[i][j],dp[i][k]+dp[k+1][j],dp[i][k]*dp[k+1][j])
+        print(dp[0][N-1])
+    except:
+        break
+###################################################    
