@@ -79,6 +79,7 @@ class Solution:
 #计算给定n个数，在它们中间添加"+"， "*"， "("， ")"符号，能够获得的最大值。
 #动态规划：对数字进行分组，例如n==4时，依次计算两个数字一组，三个数字一组，四个数字一组的最大值
 #注意到计算三个数字一组的情况用到了两个数字一组的最大值，据此可以考虑用动态规划并写出转移方程
+#
 while True:
     try:
         nums = list(map(int, input().split()))
@@ -109,6 +110,7 @@ while True:
 ###################################################
 #给定一个二叉树，返回该二叉树层序遍历的结果
 #如输入{1,2,3,4,#,#,5}，输出[[1],[2,3],[4,5]]，其中#代表None
+#
 # class TreeNode:
 #     def __init__(self, x):
 #         self.val = x
@@ -143,3 +145,31 @@ def bfs(root,bfslist):
         length = len(queue)            #区分：标识当前层和下一层的分界位置
     return bfslist
 ###################################################
+#给定一个数组arr，返回arr的最长无的重复子串的长度(无重复指的是所有数字都不相同)。
+# 
+# @param arr int整型一维数组 the array
+# @return int整型
+#
+class Solution:
+    def maxLength(self , arr ):
+        if len(arr) == 0:
+            return 0
+        d = {}
+        startpos = 0
+        endpos = 1
+        d[arr[startpos]] = startpos     #d记录从startpos开始扫描过的元素，值：索引
+        ans = 1
+        while endpos <= len(arr) - 1:
+            if arr[endpos] not in d:
+                d[arr[endpos]] = endpos
+                ans = max(ans,endpos-startpos+1)     #更新当前最大长度
+            else:
+                startpos = d[arr[endpos]]+1         #有重复元素时，更新startpos为重复元素后一个位置,此处可考虑用取大函数简化代码
+                for i in list(d.keys()):            #注意不能使用for i in d（由于字典在变化，d.keys()在变化），所以先将d.keys()提取出来再遍历
+                    if i != arr[endpos]:            #从d中startpos删除至与arr[endpos]等值元素
+                        del d[i]
+                    else:
+                        break
+            endpos += 1
+        return ans
+        # write code here
