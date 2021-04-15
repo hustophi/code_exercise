@@ -107,3 +107,39 @@ while True:
     except:
         break
 ###################################################
+#给定一个二叉树，返回该二叉树层序遍历的结果
+#如输入{1,2,3,4,#,#,5}，输出[[1],[2,3],[4,5]]，其中#代表None
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+# 
+# @param root TreeNode类 
+# @return int整型二维数组
+class Solution:
+    def levelOrder(self , root ):
+        if root:
+            return bfs(root,[])
+        else:
+            return []
+def bfs(root,bfslist):
+    queue = []
+    queue.append(root)
+    bfslist.append([root.val])
+    length = 1
+    while queue:
+        children = []
+        for i in range(length):            #遍历每一层节点
+            parent = queue.pop(0)
+            if parent.left:
+                children = children + [parent.left.val]
+                queue.append(parent.left)
+            if parent.right:
+                children = children + [parent.right.val]
+                queue.append(parent.right)
+        if children:
+            bfslist.append(children)
+        length = len(queue)            #区分：标识当前层和下一层的分界位置
+    return bfslist
+###################################################
