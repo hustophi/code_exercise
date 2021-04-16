@@ -5,7 +5,7 @@
 #
 # @param head ListNode类 
 # @return ListNode类
-#
+###################################################
 class Solution:
     def detectCycle(self , head ):
         slow = head
@@ -23,3 +23,4 @@ class Solution:
             return slow
         return None
         # write code here
+###################################################
