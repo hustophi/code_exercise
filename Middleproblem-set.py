@@ -56,7 +56,7 @@ class Solution:                                                                 
         for i in range(n):                                                                                            |             maxlen = max(temp,spread(A,i, i, n),spread(A,i, i+1, n)) #注意奇长度回文串与偶长度回文串的参数略有不同
             oddNum = A[i-max_len-1:i+1]                                                                               |         return 
             evenNum = A[i-max_len:i+1]                                                                                | def spread(A,left,right,n):        #以A[left]和A[right]为中心向左右两边扩散,返回扩散的最大长度
-            if i-max_len-1>=0 and oddNum == oddNum[::-1]:                                                             |     while left >= 0 and right <= n-1 and A[left] == A[right]:  #利用回文子串正反一样的特点进行扩散
+            if i-max_len-1>=0 and oddNum == oddNum[::-1]:                                                             |     while left >= 0 and right <= n-1 and A[left] == A[right]:  #利用回文子串正反一样的特点进行扩散，注意left和right的边界条件
                 max_len+=2                                                                                            |         left -= 1
             elif i-max_len>=0 and evenNum == evenNum[::-1]:                                                           |         right += 1
                 max_len+=1                                                                                            |     return right - left - 1
