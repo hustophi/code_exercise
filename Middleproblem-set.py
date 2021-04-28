@@ -61,3 +61,32 @@ class Solution:                                                                 
             elif i-max_len>=0 and evenNum == evenNum[::-1]:                                                           |         right += 1
                 max_len+=1                                                                                            |     return right - left - 1
         return max_len
+###################################################    
+#根据快速排序的思路，找出数组中第K大的数
+class Solution:
+    def findKth(self, a, n, K):
+        l = 0
+        r = n - 1
+        while l <= r:
+            p = partion(a,l,r)
+            if p+1 == K:
+                return a[p]
+            elif p+1 > K:
+                r = p-1
+            else:
+                l = p+1
+def partion(alist,l,r):
+    num = alist[l]
+    left = l + 1
+    right = r
+    while left <= right:
+        while left <= right and alist[left] >= num:
+            left += 1
+        while right >= left and alist[right] <= num:
+            right -= 1
+        if left <= right:
+            alist[left], alist[right] = alist[right], alist[left]
+    alist[right],alist[l] = num,alist[right]
+    return right
+        # write code here
+    ###################################################
