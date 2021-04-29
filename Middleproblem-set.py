@@ -89,4 +89,41 @@ def partion(alist,l,r):
     alist[right],alist[l] = num,alist[right]
     return right
         # write code here
-    ###################################################
+###################################################
+#请写一个整数计算器，支持加减乘除运算和括号
+# @param s string字符串 待计算的表达式
+# @return int整型
+class Solution:
+    def solve(self , s ): #此题亦可采用先转为后缀表达式再求值
+        partStack = []    #keyidea:用列表保存各部分的值,整个表达式的值即为各部分的和 (ex:原表达式形如(A*(B-C))*D,则列表保存(A*(B-C))的值和D的值)
+        sign = '+'     #使用sign记录运算符,初始化为 '+'
+        number = 0
+        i = 0
+        while i < len(s):
+            if s[i] in '0123456789':
+                number = number * 10 + ord(s[i]) - ord('0')  #number记录字符串中的数字部分
+            if s[i] == '(':                               #遇到左括号时递归求这个括号里面的表达式的值
+                counterPartition = 1
+                j = i
+                while counterPartition > 0:
+                    j += 1
+                    if s[j] == '(':
+                        counterPartition += 1
+                    if s[j] == ')':
+                        counterPartition -= 1 #先遍历找到对应的右括号,counterPartition统计括号对数直到变量为0
+                S = Solution()
+                number = S.solve(s[i+1:j])    #利用递归来达到去括号的目的,去括号后的表达式具有A+B*C-D的形式
+                i = j    #更新当前扫描到字符的索引
+            if (s[i] in '+-*') or (i == len(s) - 1):  #遇到运算符时或者到表达式末尾时,说明该操作符之前的子表达式已计算完成，可根据sign的值作相应的运算
+                if sign == '+':   #如果是当前sign为+,直接将当前number push 进去
+                    partStack.append(number)
+                if sign == '-':     #如果是-，push 进去-number
+                    partStack.append(-number)
+                if sign == '*':      #如果是 ×、÷ ，pop 出一个运算数和当前数作计算
+                    partStack.append(partStack.pop() * number)
+                if sign == '/':
+                    partStack.append(partStack.pop() / number)
+                sign = s[i]      #然后保存新的运算符到sign
+                number = 0       #并将number置零,即完成一个部分的计算
+            i += 1
+        return sum(partStack)
