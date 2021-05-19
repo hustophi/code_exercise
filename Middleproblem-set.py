@@ -127,3 +127,41 @@ class Solution:
                 number = 0       #并将number置零,即完成一个部分的计算
             i += 1
         return sum(partStack)
+        # write code here
+###################################################
+#给定一棵二叉树以及这棵树上的两个节点 o1 和 o2，请找到 o1 和 o2 的最近公共祖先节点。
+#从根节点往下递归：
+#1. 若该节点是第一个值为o1或o2的节点，则该节点是最近公共祖先；
+#2. 否则，看左子树是否包含o1或o2：
+    #2.1 若左子树包含o1或o2，则看右子树有没有：
+        #a. 若右子树没有，则公共祖先在左子树
+        #b. 若右子树有，则o1和o2肯定是左右子树一边一个，则公共祖先是根节点；
+    #2.2 若左子树不包含o1和o2，则公共祖先在右子树或者该根子树不包含o1和o2。（两种情况都取决于右子树）
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+ 
+# @param root TreeNode类 
+# @param o1 int整型 
+# @param o2 int整型 
+# @return int整型
+class Solution:
+    def lowestCommonAncestor(self , root , o1 , o2 ):
+        return self.dfs(root,o1,o2).val 
+    # 该子树是否包含o1或o2
+    def dfs(self,root,o1,o2):
+        if root is None: return  None    
+        if root.val == o1 or root.val == o2: return root    
+        left = self.dfs(root.left,o1,o2)
+        # 左子树没有，则在右子树
+                # 若右子树没有,则右子树返回 None
+        if left == None: return self.dfs(root.right,o1,o2)
+        # 左子树有，则看右子树有没有
+        right = self.dfs(root.right,o1,o2)
+        if right == None: return left
+        # 左子树右子树都有,则最近的祖先节点是root
+        return root
+        # write code here
+################################################### 
