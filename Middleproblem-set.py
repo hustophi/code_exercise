@@ -166,3 +166,42 @@ class Solution:
         return root
         # write code here
 ################################################### 
+#给定数组arr，输出arr的最长递增子序列。（如果有多个答案，请输出其中字典序最小的）
+# retrun the longest increasing subsequence
+# @param arr int整型一维数组 the array
+# @return int整型一维数组
+#
+class Solution:
+    def LIS(self , arr ):
+        monoList = [arr[0]]      #长度为 i+1 的子序列的最后一位的最小值(不是解,只是长度关联),单调递增
+        maxlen = [1]       #maxlen[i]记录以arr[i]结尾的最长递增子列长度
+        for i in arr[1:]:
+            if i >= monoList[-1]:
+                monoList.append(i)
+                maxlen.append(len(monoList))
+            else:
+                pos = findPosition(monoList, i)   #二分查找monoList中第一个 >= arr[i]的元素位置(必然存在)
+                monoList[pos] = i              #找到位置后替换掉，而非插入
+                maxlen.append(pos+1)             #monoList序列的总长不变，但是为了复用原序列一些 < arr[i]的结果，把arr[i]替换到合适的位置
+        length = len(monoList)
+        ans = [0]*length
+        for j in range(-1,-len(arr)-1,-1): #倒着遍历arr,找到满足长度的maxlen就记录，然后更新。（即同样值的maxlen，选尽量靠右边的）
+            if length > 0:
+                if maxlen[j] == length:
+                    ans[length-1] = arr[j]
+                    length -= 1
+            else:break
+        return ans
+def findPosition(li, t):     
+    if li[-1] < t: return None
+    l = 0
+    r = len(li) - 1
+    while l < r:
+        mid = (l + r) >> 1
+        if li[mid] >= t:
+            r = mid
+        else:
+            l = mid + 1
+    return r
+        # write code here
+################################################### 
