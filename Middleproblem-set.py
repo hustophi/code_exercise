@@ -204,4 +204,31 @@ def findPosition(li, t):
             l = mid + 1
     return r
         # write code here
-################################################### 
+###################################################
+#给定一个二叉树和一个值sum，请找出所有的根节点到叶子节点的节点值之和等于sum的路径
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+# @param root TreeNode类 
+# @param sum int整型 
+# @return int整型二维数组
+#
+class Solution:
+    def pathSum(self , root , target ):
+        if not root: return []
+        paths = preOrder(root, [], [])
+        return [p for p in paths if sum(p) == target]
+def preOrder(root, path, paths):
+    path.append(root.val)         #将当前节点值加入path
+    if root.left:
+        preOrder(root.left, path, paths)      #递归左子树
+    if root.right:
+        preOrder(root.right, path, paths)     #递归右子树
+    if not root.left and not root.right:    #当递归到没有子树的时候就说明遍历完一条路径path
+        paths.append(path.copy())
+    path.pop()      #很重要，从path1转到path2时须先移除path1最后一个元素，才能继续添加path2的节点
+    return paths
+        # write code here
