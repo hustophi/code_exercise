@@ -250,3 +250,20 @@ def dfs(n, x, y, s, ans):
     return ans
         # write code here
 ###################################################
+#现在有一个只包含数字的字符串，将该字符串转化成IP地址的形式，返回所有可能的情况
+# @param s string字符串 
+# @return string字符串一维数组
+#关于ip: 1.包含四段字符串，每一段≤”255”，≥0且至多包含3个字符；2.如果一个字符包括2个或3个字符，它的第一个字符不能为0，不能为010或者03等
+class Solution:
+    def restoreIpAddresses(self , s ):
+        return dfs(s, [], [])
+def dfs(s, tmp, ans):
+    if not s and len(tmp) == 4: ans.append('.'.join(tmp))
+    for i in range(1, len(s)+1):
+        if i > 1 and s[0] == '0': break   #判断是否合法
+        if int(s[0:i]) > 255: break
+        tmp.append(s[0:i])    #tmp列表保存每一步分割后的字符串
+        dfs(s[i:], tmp, ans)
+        tmp.pop()      #回溯
+    return ans
+        # write code here
