@@ -229,6 +229,24 @@ def preOrder(root, path, paths):
         preOrder(root.right, path, paths)     #递归右子树
     if not root.left and not root.right:    #当递归到没有子树的时候就说明遍历完一条路径path
         paths.append(path.copy())
-    path.pop()      #很重要，从path1转到path2时须先移除path1最后一个元素，才能继续添加path2的节点
+    path.pop()      #回溯很重要，从path1转到path2时须先移除path1最后一个元素，才能继续添加path2的节点
     return paths
         # write code here
+###################################################
+#给出n对括号，请编写一个函数来生成所有的由n对括号组成的合法组合
+#关键：当前位置左括号不少于右括号
+#构造图，其中节点：目前位置左括号和右括号数（x,y）(x>=y)  边：从（x,y)到（x+1,y）和（x，y+1），x==y时，没有（x,y+1）这条边
+#解是从(0,0)出发到(n,n)的全部路径(类比上题)
+# @param n int整型 
+# @return string字符串一维数组
+#
+class Solution:
+    def generateParenthesis(self , n ):
+        return dfs(n, 0, 0, '', [])
+def dfs(n, x, y, s, ans):
+    if x == n and y == n: ans.append(s)
+    if x < n: dfs(n, x+1, y, s+'(', ans)
+    if x > y: dfs(n, x, y+1, s+')', ans)
+    return ans
+        # write code here
+###################################################
