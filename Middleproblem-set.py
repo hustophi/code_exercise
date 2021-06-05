@@ -259,11 +259,11 @@ class Solution:
         return dfs(s, [], [])
 def dfs(s, tmp, ans):
     if not s and len(tmp) == 4: ans.append('.'.join(tmp))
-    for i in range(1, len(s)+1):
+    for i in range(1, len(s)+1):      #i为每一段的长度，可以为1，2，3
         if i > 1 and s[0] == '0': break   #判断是否合法
         if int(s[0:i]) > 255: break
         tmp.append(s[0:i])    #tmp列表保存每一步分割后的字符串
-        dfs(s[i:], tmp, ans)
+        dfs(s[i:], tmp, ans)  #递归
         tmp.pop()      #回溯
     return ans
         # write code here
