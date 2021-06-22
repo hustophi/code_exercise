@@ -54,7 +54,7 @@ def spiralHelp(matrix,start,m,n,li):
         for row in range(start+1,m+1):
             li.append(matrix[row][n])
         for col in range(n-1,start-1,-1):
-            if start != m:                     #若无此判断,奇*奇阶矩阵不满足,即会重复便利,下同
+            if start != m:                     #若无此判断,奇*奇阶矩阵不满足,即会重复遍历,下同
                 li.append(matrix[m][col])
         for row in range(m-1,start,-1):
             if start != n:                     #若无此判断,奇*偶阶矩阵不满足
