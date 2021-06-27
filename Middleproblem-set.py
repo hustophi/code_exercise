@@ -267,3 +267,34 @@ def dfs(s, tmp, ans):
         tmp.pop()      #回溯
     return ans
         # write code here
+###################################################
+#在数组中的两个数字，如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。
+#输入一个数组,求出这个数组中的逆序对的总数P
+# -*- coding:utf-8 -*-
+class Solution:
+    def InversePairs(self, data):
+        return inversePairsHelp(data, 0, len(data)-1)
+def inversePairsHelp(data, l, r):    #借助归并排序
+    if l == r: return 0
+    mid = l + ((r - l) >> 1)
+    left = inversePairsHelp(data, l, mid)
+    right = inversePairsHelp(data, mid + 1, r)
+    ans = left + right         #整个数组的逆序对 = 左子数组逆序对+右子数组逆序对 + 左右子数组共同组成逆序对  (递归)
+    tmp = data[l:r+1]          #当左右数组有序时可在线性时间复杂度内得到第三项,考虑到归并排序也有递归的思想,因此可在一个递归下同时做这两件事情:排序和计算逆序对(O(nlogn))
+    i, j, k = mid - l, r - l, r
+    while i >= 0 and j >= mid+1-l:     #每次让data[l:r+1]中的最大数归位
+        if tmp[i] > tmp[j]:
+            ans += j - mid + l
+            data[k] = tmp[i]
+            i -= 1
+        else:
+            data[k] = tmp[j]
+            j -= 1
+        k -= 1
+    if i >= 0:                      #让剩下的数归位
+        data[l:k+1] = tmp[0:i+1]
+    if j >= mid+1-l: 
+        data[l:k+1] = tmp[mid+1-l:j+1]
+    return ans
+        # write code here
+###################################################    
