@@ -309,9 +309,7 @@ def inversePairsHelp(data, l, r):    #借助归并排序
 import heapq
 class Solution:
     def __init__(self):
-        self.maxHeap, self.minHeap = [], []
-    #heapq.heapify(maxHeap)   #小于等于中位数
-        #heapq.heapify(minHeap)   #大于中位数
+        self.maxHeap, self.minHeap = [], []    #maxHeap存放小于等于中位数, minHeap存放大于中位数
     def flowmedian(self , operations ):
         ans = []
         for op in operations:
