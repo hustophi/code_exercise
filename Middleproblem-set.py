@@ -298,3 +298,36 @@ def inversePairsHelp(data, l, r):    #借助归并排序
     return ans
         # write code here
 ###################################################    
+#有一个源源不断的吐出整数的数据流，假设你有足够的空间来保存吐出的数。请设计一个名叫MedianHolder的结构，MedianHolder可以随时取得之前吐出所有数的中位数。
+#[要求]
+#1. 如果MedianHolder已经保存了吐出的N个数，那么将一个新数加入到MedianHolder的过程，其时间复杂度是O(logN)。
+#2. 取得已经吐出的N个数整体的中位数的过程，时间复杂度为O(1)
+#keypoint:中位数即某个能将所有数根据大小关系划分为左右两半的数，只要能够不断的维护好这两部分的数，中位数就能在O(1)的时间内求得
+# @param operations int整型二维数组 ops
+# @return double浮点型一维数组
+#
+import heapq
+class Solution:
+    def __init__(self):
+        self.maxHeap, self.minHeap = [], []
+    #heapq.heapify(maxHeap)   #小于等于中位数
+        #heapq.heapify(minHeap)   #大于中位数
+    def flowmedian(self , operations ):
+        ans = []
+        for op in operations:
+            if op[0] == 1:
+                self.addNum(op[1])
+            if op[0] == 2:
+                ans.append(self.findMedia())
+        return ans
+    def addNum(self, num):    #trick:让数据在两个堆中流动一遍
+        heapq.heappush(self.maxHeap, -num)
+        heapq.heappush(self.minHeap, -heapq.heappop(self.maxHeap))
+        if len(self.maxHeap) < len(self.minHeap):       # 平衡左右两个堆的大小，总是保证len(maxHeap) >= len(minHeap)且至多多1
+            heapq.heappush(self.maxHeap, -heapq.heappop(self.minHeap))
+    def findMedia(self):
+        if len(self.maxHeap) == 0: return -1
+        if len(self.maxHeap) == len(self.minHeap): return (self.minHeap[0] - self.maxHeap[0]) / 2   #偶数个数据
+        else: return -self.maxHeap[0]    #奇数个数据
+        # write code here
+###################################################    
