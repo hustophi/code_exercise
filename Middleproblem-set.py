@@ -329,3 +329,59 @@ class Solution:
         else: return -self.maxHeap[0]    #奇数个数据
         # write code here
 ###################################################    
+#一个整型数组里除了两个数字只出现一次，其他的数字都出现了两次。请写程序找出这两个只出现一次的数字 
+# @param array int整型一维数组 
+# @return int整型一维数组
+#由于存在a != b, tmp == a ^ b且tmp不等于0, 依据tmp二进制表示中右起第一位不为1的位置将数组划分为两部分
+#则a, b必分属不同部分，再次对两部分分别异或即得a, b
+class Solution:
+    def FindNumsAppearOnce(self , array ):
+        ans = [0] * 2
+        tmp = 0
+        i = 1
+        for num in array: tmp = tmp ^ num    # ^异或: a^0 = a, a^a = 0
+        while tmp & i == 0:                  # &按位与
+            i <<= 1 
+        for num in array:
+            if num & i == 0: ans[0] ^= num
+            else: ans[1] ^= num
+        if ans[0] > ans[1]: ans.reverse()
+        return ans
+        # write code here
+###################################################
+#把只包含质因子2、3和5的数称作丑数（Ugly Number）,习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第N个丑数
+class Solution:
+    def GetUglyNumber_Solution(self, index):
+        if not index: return 0
+        uglys = [1]
+        p2, p3, p5 = 0, 0, 0
+        for i in range(1, index): #前面生成的每一个丑数都应该乘以2，3，5以产生新的丑数
+            uglys.append(min(uglys[p2] * 2, uglys[p3] * 3 ,uglys[p5] * 5))#但是我们不必比较前面的每一个丑数, 例如假设前面的某个丑数a 因为乘以2 得到了当前的丑数b，下一次再生成下一个丑数时，就不用再考察a以及a前面的丑数*2的情况
+            if uglys[i] % 2 == 0: p2 += 1
+            if uglys[i] % 3 == 0: p3 += 1
+            if uglys[i] % 5 == 0: p5 += 1
+        return uglys[-1]
+        # write code here
+###################################################
+#一个重复字符串是由两个相同的字符串首尾拼接而成，例如abcabc便是长度为6的一个重复字符串，而abcba则不存在重复字符串。
+#给定一个字符串，请编写一个函数，返回其最长的重复字符子串。若不存在任何重复字符子串，则返回0。
+# @param a string字符串 待计算字符串
+# @return int整型
+#
+class Solution:
+    def solve(self , a ):
+        n = len(a)
+        if n < 2:
+            return 0
+        count = 0
+        for window in range(n // 2, -1, -1):
+            for j in range(n - window):
+                if a[j] == a[j+window]:
+                    count += 1
+                else:
+                    count = 0
+                if count == window:
+                    return 2 * window
+        return 0
+        # write code here
+###################################################
