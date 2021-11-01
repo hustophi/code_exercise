@@ -172,4 +172,31 @@ class Solution:
                         break
             endpos += 1
         return ans
+###################################################
+#数组中只出现一次的数（其它数出现k次）
+#时间复杂度 O(32n)，空间复杂度 O(1)
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+#
+# 
+# @param arr int一维数组 
+# @param k int 
+# @return int
+#
+class Solution:
+    def foundOnceNumber(self , arr , k ):
+        positive = 0
+        negative = 0
+        for num in arr:
+            if num < 0: negative += 1
+            if num > 0: positive += 1         #统计正负个数,便于后面使用位运算
+        binList = [0] * 32
+        res = 0
+        for pos in range(32):
+            for num in arr:
+                binList[pos] += (abs(num) >> pos & 1)      #IMPORTANT: 1.先取绝对值再移位 2.与1作按位与&可得二进制末位
+            binList[pos] %= k
+            res += binList[pos] << pos
+        if negative % k: return -res          #判断正负号
+        return res
         # write code here
