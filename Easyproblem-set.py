@@ -182,7 +182,7 @@ class Solution:
 # @param arr int一维数组 
 # @param k int 
 # @return int
-#
+##把每个数的二进制表示的每一位加起来，对于每一位的和，如果能被k整除，那对应那个只出现一次的数字的那一位就是0，否则对应的那一位是1
 class Solution:
     def foundOnceNumber(self , arr , k ):
         positive = 0
@@ -199,4 +199,24 @@ class Solution:
             res += binList[pos] << pos
         if negative % k: return -res          #判断正负号
         return res
+###################################################
+#给定一个无序数组 arr , 其中元素可正、可负、可0。给定一个整数 k
+#求 arr 所有连续子数组中累加和为k的最长连续子数组长度。保证至少存在一个合法的连续子数组。
+#
+# max length of the subarray sum = k
+# @param arr int整型一维数组 the array
+# @param k int整型 target
+# @return int整型
+#
+class Solution:
+    def maxlenEqualK(self , arr , k ):
+        tmpDict = {0: -1}    #记录出现过的tmpSum值和的它出现的最早位置，即第一次出现的位置。key代表出现过的tmpSum,value代表第一次出现的位置
+        tmpSum = 0           #从arr[0]一直加到arr[i]的累加和
+        maxlen = 0
+        for i in range(len(arr)):
+            tmpSum += arr[i]
+            #IMPORTANT: 如果tmpSum-k存在，由于map的value记录的是最早出现的位置，所以此时arr[j+1…i]是以arr[i]结尾的所有子数组中，累加和为k的子数组中最长的
+            if tmpSum - k in tmpDict : maxlen = max(maxlen, i - tmpDict[tmpSum - k])
+            if tmpSum not in tmpDict: tmpDict[tmpSum] = i
+        return maxlen
         # write code here
