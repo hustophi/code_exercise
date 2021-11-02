@@ -245,4 +245,25 @@ def findMax(arr, k):
         if arr[mid] <= k: left = mid + 1
         if arr[mid] > k: right = mid
     return left
+###################################################
+#给定一棵二叉树，判断其是否是自身的镜像（即：是否对称）
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+# 
+# @param pRoot TreeNode类 
+# @return bool布尔型
+#
+#对称二叉树，必须满足：1. L->val == R->val 2. L->left->val == R->right->val 3. L->right->val == R->left->val
+class Solution:
+    def isSymmetrical(self , pRoot: TreeNode) -> bool:
+        return symmetricHelper(pRoot, pRoot)
+def symmetricHelper(root1, root2):
+    if not root1 and not root2: return True
+    if not root1 or not root2: return False
+    return root1.val == root2.val and \
+           symmetricHelper(root1.left, root2.right) and \
+           symmetricHelper(root1.right, root2.left)
         # write code here
