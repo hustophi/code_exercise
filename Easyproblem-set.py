@@ -175,10 +175,6 @@ class Solution:
 ###################################################
 #数组中只出现一次的数（其它数出现k次）
 #时间复杂度 O(32n)，空间复杂度 O(1)
-#
-# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
-#
-# 
 # @param arr int一维数组 
 # @param k int 
 # @return int
@@ -219,4 +215,34 @@ class Solution:
             if tmpSum - k in tmpDict : maxlen = max(maxlen, i - tmpDict[tmpSum - k])
             if tmpSum not in tmpDict: tmpDict[tmpSum] = i
         return maxlen
+###################################################
+#给定一个长度为 n 的非降序数组和一个非负数整数 k ，要求统计 k 在数组中出现的次数
+# @param data int整型一维数组 
+# @param k int整型 
+# @return int整型
+#
+class Solution:
+    def GetNumberOfK(self , data: List[int], k: int) -> int:
+        if not data: return 0
+        leftmark = findMin(data, k)
+        rightmark = findMax(data, k)
+        return rightmark - leftmark
+def findMin(arr, k):
+    '''寻找第一个 ≥k 的位置'''
+    left = 0
+    right = len(arr)      #相当于添加一个无穷大在data末尾,下同
+    while left < right:
+        mid = (left + right) // 2
+        if arr[mid] < k: left = mid + 1 
+        else: right = mid
+    return left
+def findMax(arr, k):
+    '''寻找第一个 >k 的位置'''
+    left = 0
+    right = len(arr)
+    while left < right:
+        mid = (left + right) // 2
+        if arr[mid] <= k: left = mid + 1
+        if arr[mid] > k: right = mid
+    return left
         # write code here
