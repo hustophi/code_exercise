@@ -279,7 +279,7 @@ def symmetricHelper(root1, root2):
 #
 class Solution:
     def mergeTrees(self , t1: TreeNode, t2: TreeNode) -> TreeNode:
-        #Sol：合并后的树记为newRoot,前序遍历将对应位置节点合并
+        #Sol：合并后的树记为newRoot,先序遍历将对应位置节点合并
         if not t1 and not t2: return None
         elif not t1 or not t2: 
             newRoot = t1 if t1 else t2      #当t1,t2中只有一棵树的当前节点为空时,直接插入即可，无需递归
