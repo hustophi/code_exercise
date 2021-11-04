@@ -266,4 +266,27 @@ def symmetricHelper(root1, root2):
     return root1.val == root2.val and \
            symmetricHelper(root1.left, root2.right) and \
            symmetricHelper(root1.right, root2.left)
+###################################################
+#已知两颗二叉树，将它们合并成一颗二叉树。合并规则是：都存在的结点，就将结点值加起来，否则空的位置就由另一个树的结点来代替
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+# 
+# @param t1 TreeNode类 
+# @param t2 TreeNode类 
+# @return TreeNode类
+#
+class Solution:
+    def mergeTrees(self , t1: TreeNode, t2: TreeNode) -> TreeNode:
+        #Sol：合并后的树记为newRoot,前序遍历将对应位置节点合并
+        if not t1 and not t2: return None
+        elif not t1 or not t2: 
+            newRoot = t1 if t1 else t2      #当t1,t2中只有一棵树的当前节点为空时,直接插入即可，无需递归
+        else: 
+            newRoot = TreeNode(t1.val + t2.val)
+            newRoot.left = self.mergeTrees(t1.left, t2.left)            #当t1,t2的当前节点都不空时，相加后递归创建左右子树
+            newRoot.right = self.mergeTrees(t1.right, t2.right)
+        return newRoot
         # write code here
