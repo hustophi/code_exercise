@@ -288,4 +288,24 @@ class Solution:
             newRoot.left = self.mergeTrees(t1.left, t2.left)            #当t1,t2的当前节点都不空时，相加后递归创建左右子树
             newRoot.right = self.mergeTrees(t1.right, t2.right)
         return newRoot
+###################################################
+#有一个NxN整数矩阵，请编写一个算法，将矩阵顺时针旋转90度
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# 
+# @param mat int整型二维数组 
+# @param n int整型 
+# @return int整型二维数组
+#先转置，再将i列与n-i+1列交换(i=1 ... n//2)
+class Solution:
+    def rotateMatrix(self , mat: List[List[int]], n: int) -> List[List[int]]:
+        for row in range(n):
+            for col in range(row+1, n):
+                mat[row][col], mat[col][row] = mat[col][row], mat[row][col]
+        i = 1
+        while i <= n // 2:
+            for row in range(n):
+                mat[row][i-1], mat[row][n-i] = mat[row][n-i], mat[row][i-1]
+            i += 1
+        return mat
         # write code here
