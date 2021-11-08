@@ -407,3 +407,32 @@ def FindHelp(target, array, end_row, start_col):
     if target < array[end_row][start_col]:
         return FindHelp(target, array, end_row - 1, start_col)
         # write code here
+###################################################
+#给定两个递增数组arr1和arr2，已知两个数组的长度都为N，求两个数组中所有数的上中位数(time:O(logN),space:O(1))
+#note:上中位数：假设递增序列长度为n，为第n/2个数
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# find median in two sorted array
+# @param arr1 int整型一维数组 the array1
+# @param arr2 int整型一维数组 the array2
+# @return int整型
+#
+class Solution:
+    def findMedianinTwoSortedAray(self , arr1: List[int], arr2: List[int]) -> int:
+        return aux(arr1, arr2, 0, len(arr1)-1, 0, len(arr2)-1)
+def aux(arr1, arr2, l1, r1, l2, r2):
+    if l1 == r1: return min(arr1[l1], arr2[l2])     #终止条件1
+    mid1 = (l1 + r1) // 2
+    mid2 = (l2 + r2) // 2
+    lenth = r1 - l1 + 1
+    if arr1[mid1] == arr2[mid2]:       #终止条件2
+        return arr1[mid1]
+    if arr1[mid1] > arr2[mid2]:
+        r1 = mid1
+        l2 = mid2 if lenth % 2 else mid2+1          #IMPORTANT:数组长度分奇偶性讨论, 确保两个数组删除的元素个数相同
+    if arr1[mid1] < arr2[mid2]:
+        r2 = mid2
+        l1 = mid1 if lenth % 2 else mid1+1
+    return aux(arr1, arr2, l1, r1, l2, r2)          #递归求解
+        # write code here
+###################################################
