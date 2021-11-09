@@ -436,3 +436,27 @@ def aux(arr1, arr2, l1, r1, l2, r2):
     return aux(arr1, arr2, l1, r1, l2, r2)          #递归求解
         # write code here
 ###################################################
+#现在有一个没有重复元素的整数集合S，求S的所有子集
+#注意：给出的子集中的元素必须按升序排列; 给出的解集中不能出现重复的元素
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# @param S int整型一维数组 
+# @return int整型二维数组
+#
+class Solution:
+    def subsets(self , S: List[int]) -> List[List[int]]:
+        if not S: return []
+        S.sort()      #排序,满足子集内升序
+        allsubs = []
+        for lenth in range(len(S)+1):     #以子集长度分类添加
+            dfs(S, [], allsubs, 0, lenth)
+        return allsubs
+def dfs(S, tmpSet, res, start, Len):     #更新start参数确保不会有重复集合
+    if len(tmpSet) == Len: res.append(tmpSet.copy())      #满足长度条件，加入res
+    else:
+        for i in range(start, len(S)):
+            tmpSet.append(S[i])
+            dfs(S, tmpSet, res, i+1, Len)
+            tmpSet.pop()
+    return res
+        # write code here
