@@ -460,3 +460,23 @@ def dfs(S, tmpSet, res, start, Len):     #更新start参数确保不会有重复
             tmpSet.pop()
     return res
         # write code here
+###################################################
+#给定一个非负整数 n ，返回 n! 结果的末尾为 0 的数量
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# the number of 0
+# @param n long长整型 the number
+# @return long长整型
+#
+#由因数分解知识可将问题转为: n!能拆出多少对(2,5)
+#IMPORTANT: 可以发现，有5因子的数比有2因子的数要少,所以只需求能拆出来多少个因子5即可(因为一定能有足够数量的因子2来匹配)
+#又发现，5的倍数可以至少产生1个5，25的倍数可以产生至少2个5，125的倍数可以产生至少3个5...，因此答案即为 n/5+n/25+n/25...
+class Solution:
+    def thenumberof0(self , n: int) -> int:
+        res = 0
+        div = 5
+        while n // div:
+            res += n // div
+            div *= 5
+        return res
+        # write code here
