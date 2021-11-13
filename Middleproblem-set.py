@@ -480,3 +480,25 @@ class Solution:
             div *= 5
         return res
         # write code here
+###################################################
+#给定一个长度为n的数组nums，请你找到峰值并返回其索引。数组可能包含多个峰值，在这种情况下，返回任何一个所在位置即可。
+#1.峰值元素是指其值严格大于左右相邻值的元素。严格大于即不能有等于
+#2.假设 nums[-1] = nums[n] = −∞
+#3.对于所有有效的 i 都有 nums[i] != nums[i + 1]
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# @param nums int整型一维数组 
+# @return int整型
+#最优解法：二分
+class Solution:
+    def findPeakElement(self , nums: List[int]) -> int:
+        l = 0
+        r = len(nums) - 1     #[l,r]为一定存在峰值的区间
+        while l < r:          #不断二分压缩区间,最后的单点集即为峰值索引
+            mid = (l + r) >> 1
+            if nums[mid] < nums[mid+1]:
+                l = mid + 1     #IMPORTANT: l, r的更新必须保证[l,r]一定存在峰值
+            else:
+                r = mid
+        return l
+        # write code here
