@@ -1,3 +1,44 @@
+#kmp算法应用：给你一个文本串 T ，一个非空模板串 S ，问 S 在 T 中出现了多少次
+#空间复杂度 O(len(S))，时间复杂度 O(len(S)+len(T))
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+#
+# 计算模板串S在文本串T中出现了多少次
+# @param S string字符串 模板串
+# @param T string字符串 文本串
+# @return int整型
+#
+class Solution:
+    def kmp(self , S , T ):
+        i, j = 0, 0
+        lenthS, lenthT = len(S), len(T)
+        if lenthS > lenthT: return 0
+        cnt = 0
+        nextArr = getNext(S)
+        while lenthT - i >= lenthS - j:
+            if j != -1 and T[i] == S[j]:
+                i += 1
+                j += 1
+            elif j != -1 and T[i] != S[j]: j = nextArr[j]
+            else: 
+                i += 1
+                j += 1
+            if j == lenthS:      #匹配到一个模板串后,i,j更新规则如下:
+                i -= 1           #i应为当前匹配子串的最后一个字符
+                j = nextArr[-1]  #j应为nextArr对应最后一个字符的值
+                cnt += 1
+        return cnt
+def getNext(S):
+    nextList = [-1, 0]
+    for i in range(2, len(S)):
+        tmp = nextList[i-1]
+        while tmp != -1:
+            if S[i-1] == S[tmp]: break
+            tmp = nextList[tmp]
+        nextList.append(tmp + 1)
+    return nextList
+        # write code here
+###################################################
 #对于一个给定的链表，返回环的入口节点，如果没有环，返回None
 # class ListNode:
 #     def __init__(self, x):
