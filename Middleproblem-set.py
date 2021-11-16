@@ -38,6 +38,33 @@ def getNext(S):
     return nextList
         # write code here
 ###################################################
+#尺取法应用：给定一个长度为 n 的数组 num 和滑动窗口的大小 size ，找出所有滑动窗口里数值的最大值
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可 
+# @param num int整型一维数组 
+# @param size int整型 
+# @return int整型一维数组
+#
+class Solution:
+    def maxInWindows(self , num: List[int], size: int) -> List[int]:
+        lenth = len(num)
+        res = []
+        if not size or size > lenth: return res
+        deque = []           #双端队列,记录下标
+        left, right = -1, 0
+        while right < len(num):
+            while deque and num[right] > num[deque[-1]]:
+                deque.pop()      #右边界当前数大于队尾,出队直到队尾大于等于当前数
+            deque.append(right)
+            right += 1               #deque[0]始终为(left,right)的最大值下标
+            if deque[0] == left:     #判断当前窗口最大值是否为左边界数
+                deque.pop(0)
+            if right - left > size:     #当达到指定窗口大小时,记录结果并更新left
+                res.append(num[deque[0]])
+                left += 1
+        return res
+        # write code here
+###################################################
 #对于一个给定的链表，返回环的入口节点，如果没有环，返回None
 # class ListNode:
 #     def __init__(self, x):
