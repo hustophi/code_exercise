@@ -590,4 +590,30 @@ class Solution:
                     long=max(long, cur_long)
         return long
         # write code here
-
+###################################################
+#一座大楼有 n+1 层，地面算作第0层，最高的一层为第 n 层。已知棋子从第0层掉落肯定不会摔碎，从第 i 层掉落可能会摔碎，也可能不会摔碎
+#给定整数 n 作为楼层数，再给定整数 k 作为棋子数，返回如果想找到棋子不会摔碎的最高层数，即使在最差的情况下扔的最小次数。一次只能扔一个棋子
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# 返回最差情况下扔棋子的最小次数
+# @param n int整型 楼层数
+# @param k int整型 棋子数
+# @return int整型
+#反过来考虑: dp[i][j]为i个棋子扔j次能够辨别的最大n值
+#key1：动态方程dp[i][j] = dp[i-1][j-1]+1 + dp[i][j-1],可使用一维数组和一个记录变量节省空间复杂度
+#记dp[i-1][j-1]为k,第1颗棋子在k+1层扔下,若碎,剩下i-1颗棋子扔j-1次可得结果;否则剩下i颗棋子扔j-1次
+import math
+class Solution:
+    def solve(self , n: int, k: int) -> int:
+        b = math.log2(n) + 1 #key2：采取二分策略时最差情况所需次数,优化时间复杂度
+        if k >= b:
+            return int(b)
+        dp = [0] * k
+        res = 0
+        while True:
+            tmp = 0
+            res += 1
+            for i in range(k):
+                dp[i], tmp = tmp + dp[i] + 1, dp[i]
+                if dp[i] >= n: return res     #依次增加扔的次数并判断是否达到要求
+        # write code here
