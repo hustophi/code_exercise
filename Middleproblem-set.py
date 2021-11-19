@@ -617,3 +617,33 @@ class Solution:
                 dp[i], tmp = tmp + dp[i] + 1, dp[i]
                 if dp[i] >= n: return res     #依次增加扔的次数并判断是否达到要求
         # write code here
+###################################################
+#给定一个由'0'和'1'组成的2维矩阵，返回该矩阵中最大的由'1'组成的正方形的面积，输入的矩阵是字符形式而非数字形式
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# 最大正方形
+# @param matrix char字符型二维数组 
+# @return int整型
+class Solution:
+    def solve(self , matrix: List[List[str]]) -> int:
+        if not matrix or not matrix[0]: return 0  #判断矩阵是否为空
+        rows, cols = len(matrix), len(matrix[0])
+        dp = [[0] * cols for i in range(rows)]    #IMPORTANT: dp[i][j]表示的是在矩阵中以坐标(i,j)为右下角的最大正方形边长
+        res = 0
+        for r in range(rows):
+            if matrix[r][0] == '1':     #base case直接求
+                res = 1
+                dp[r][0] = 1
+        for c in range(cols):
+            if matrix[0][c] == '1':
+                res = 1
+                dp[0][c] = 1
+        for row in range(1, rows):
+            for col in range(1, cols):
+                if matrix[row][col] == '0':
+                    dp[row][col] = 0
+                else:
+                    dp[row][col] = min(dp[row-1][col], dp[row][col-1], dp[row-1][col-1]) + 1     #IMPORTANT:动态方程,dp[row][col-1]为水平方向可延伸的最大长度，dp[row-1][col]为垂直方向可延伸的最大长度
+                res = max(pow(dp[row][col], 2), res)
+        return res
+        # write code here
