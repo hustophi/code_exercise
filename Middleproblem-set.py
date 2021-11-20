@@ -647,3 +647,26 @@ class Solution:
                 res = max(pow(dp[row][col], 2), res)
         return res
         # write code here
+###################################################
+#有 n 个活动即将举办，每个活动都有开始时间与活动的结束时间，第 i 个活动的开始时间是 starti ,第 i 个活动的结束时间是 endi ,举办某个活动就需要为该活动准备一个活动主持人
+#一位活动主持人在同一时间只能参与一个活动。并且活动主持人需要全程参与活动，换句话说，一个主持人参与了第 i 个活动，那么该主持人在 (starti,endi) 这个时间段不能参与其他任何活动
+#求为了成功举办这 n 个活动，最少需要多少名主持人
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# 计算成功举办活动需要多少名主持人
+# @param n int整型 有n个活动
+# @param startEnd int整型二维数组 startEnd[i][0]用于表示第i个活动的开始时间，startEnd[i][1]表示第i个活动的结束时间
+# @return int整型
+#
+import heapq
+class Solution:
+    def minmumNumberOfHost(self , n: int, startEnd: List[List[int]]) -> int:
+        startEnd.sort()     #按开始时间升序,此步不可省略
+        endTime = [float('inf')]  #结束时间优先队列，初始化为无穷大
+        for party in startEnd:
+            if party[0] >= endTime[0]:  #若开始时间≥最早结束时间
+                n -= 1                  #则有一个主持人可以共用
+                heapq.heappop(endTime)  #弹出最早结束时间
+            heapq.heappush(endTime, party[1]) #更新优先队列
+        return n
+        # write code here
