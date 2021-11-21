@@ -85,4 +85,56 @@ class Solution:
         help(root)
         return res 
         # write code here        
-
+################################################
+#给出一个长度为 n 的，仅包含字符 '(' 和 ')' 的字符串，计算最长的格式正确的括号子串的长度
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+#
+# 
+# @param s string字符串 
+# @return int整型
+#dp[i]为以s[i]结尾的最长正确括号子串长度,对s[i]和s[i-1]分情况
+#注意到最长正确括号串的特殊性质知: 当s[i]==s[i-1]==')'时,与s[i]配对的只可能是s[i-1-dp[i-1]]
+#以s[i]结尾的正确括号串必包含以s[i-1]结尾的正确括号串, 且长度至少增加2
+#NOTES:若无以s[i-1]结尾的正确括号串,那么也不存在以s[i]结尾的正确括号串 (反证法)
+class Solution:
+    def longestValidParentheses(self , s: str) -> int:
+        L = len(s)
+        if L <= 1: return 0
+        dp = [0] * L
+        dp[1] = 2 if s[:2] == '()' else 0
+        res = max(dp[1], 0)   #维护最大值
+        for i in range(2, L):
+            if s[i] == ')':     #对s[i]分情况
+                if s[i-1] == '(': dp[i] = dp[i-2] + 2     #对s[i-1]分情况
+                else:
+                    if i-1-dp[i-1] >= 0 and s[i-1-dp[i-1]] == '(': #判断是否有s[i]的配对字符
+                        dp[i] = dp[i-1] + 2 + \
+                        (dp[i-2-dp[i-1]] if i-2-dp[i-1] >= 0 else 0) #dp方程, s[i]配对后还应考虑能否与之前的串相连接
+                    else: dp[i] = 0
+            res = max(res, dp[i])
+        return res
+        # write code here
+################################################
+#请实现支持'?'和'*'的通配符模式匹配，'?' 可以匹配任何单个字符(即长度为1)；'*' 可以匹配任何字符序列（包括空序列）
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可 
+# @param s string字符串 
+# @param p string字符串 
+# @return bool布尔型
+#KEY: dp[i][j]表示字符串s的前i个字符和模式串p的前j个字符是否能匹配，并对p的第j个字符分情况讨论得dp方程
+class Solution:
+    def isMatch(self , s: str, p: str) -> bool:
+        lenthS, lenthP = len(s), len(p)
+        dp = [[False] * (lenthP + 1) for i in range(lenthS + 1)]
+        dp[0][0] = True
+        for j in range(1, lenthP+1):
+            if p[j-1] == '*': dp[0][j] = True    #边界条件
+            else: break
+        for i in range(1, lenthS+1):
+            for j in range(1, lenthP+1):
+                if s[i-1] == p[j-1] or p[j-1] == '?': dp[i][j] = dp[i-1][j-1]  #若p[j-1]是字符或?,那么对应的s[i-1]必须是小写字母才可能匹配
+                elif p[j-1] == '*': 
+                    dp[i][j] = dp[i-1][j] or dp[i][j-1]          #IMPORTANT: 如果p[j]是星号则:1.不使用这个星号，dp[i][j]=dp[i][j-1]转移过来; 2.使用这个星号,dp[i][j]=dp[i-1][j]
+        return dp[-1][-1]
+        # write code here
