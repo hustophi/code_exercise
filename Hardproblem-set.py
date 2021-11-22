@@ -115,7 +115,6 @@ class SolutionOfDp:
         # write code here
  class SolutionOfStack:
     def longestValidParentheses(self , s ):
-        # write code here
         stack = [-1]
         ans = 0
         for i, ch in enumerate(s):
@@ -132,6 +131,7 @@ class SolutionOfDp:
                     # 将其下标放入栈中
                     stack[-1] = i
         return ans
+        # write code here
 ################################################
 #请实现支持'?'和'*'的通配符模式匹配，'?' 可以匹配任何单个字符(即长度为1)；'*' 可以匹配任何字符序列（包括空序列）
 #
