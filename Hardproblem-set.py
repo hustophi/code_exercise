@@ -88,16 +88,14 @@ class Solution:
 ################################################
 #给出一个长度为 n 的，仅包含字符 '(' 和 ')' 的字符串，计算最长的格式正确的括号子串的长度
 #
-# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
-#
-# 
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可 
 # @param s string字符串 
 # @return int整型
 #dp[i]为以s[i]结尾的最长正确括号子串长度,对s[i]和s[i-1]分情况
 #注意到最长正确括号串的特殊性质知: 当s[i]==s[i-1]==')'时,与s[i]配对的只可能是s[i-1-dp[i-1]]
 #以s[i]结尾的正确括号串必包含以s[i-1]结尾的正确括号串, 且长度至少增加2
 #NOTES:若无以s[i-1]结尾的正确括号串,那么也不存在以s[i]结尾的正确括号串 (反证法)
-class Solution:
+class SolutionOfDp:
     def longestValidParentheses(self , s: str) -> int:
         L = len(s)
         if L <= 1: return 0
@@ -115,6 +113,25 @@ class Solution:
             res = max(res, dp[i])
         return res
         # write code here
+ class SolutionOfStack:
+    def longestValidParentheses(self , s ):
+        # write code here
+        stack = [-1]
+        ans = 0
+        for i, ch in enumerate(s):
+            if ch == '(':
+                # 左括号下标入栈
+                stack.append(i)
+            else:
+                if len(stack) > 1:
+                    # 匹配括号
+                    stack.pop()
+                    # 最大括号长度
+                    ans = max(ans, i-stack[-1])
+                else:
+                    # 将其下标放入栈中
+                    stack[-1] = i
+        return ans
 ################################################
 #请实现支持'?'和'*'的通配符模式匹配，'?' 可以匹配任何单个字符(即长度为1)；'*' 可以匹配任何字符序列（包括空序列）
 #
