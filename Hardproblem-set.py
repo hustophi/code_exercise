@@ -1,11 +1,11 @@
 #合并k个已排序的链表并将其作为一个已排序的链表返回。分析并描述其复杂度(O(nlogk),)
+#
 # class ListNode:
 #     def __init__(self, x):
 #         self.val = x
 #         self.next = None
 # @param lists ListNode类一维数组 
 # @return ListNode类
-#
 import heapq
 class Solution:
     def mergeKLists(self , lists ):
@@ -29,7 +29,6 @@ class Solution:
 #3. 假设买入卖出均无手续费
 #
 # 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
-#
 # 两次交易所能获得的最大收益
 # @param prices int整型一维数组 股票每一天的价格
 # @return int整型
@@ -58,13 +57,12 @@ class Solution:
 #注意: 1.同一个节点在一条二叉树路径里中最多出现一次; 2.一条路径至少包含一个节点，且不一定经过根节点
 #给定一个二叉树的根节点root，请你计算它的最大路径和
 #key: 递归计算经过每个节点的最大路径和,维护一个最大值
-
+#
 # class TreeNode:
 #     def __init__(self, x):
 #         self.val = x
 #         self.left = None
 #         self.right = None
-
 # @param root TreeNode类 
 # @return int整型
 #
