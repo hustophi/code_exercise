@@ -91,6 +91,7 @@ class Solution:
 # 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可 
 # @param s string字符串 
 # @return int整型
+#动态规划解法
 #dp[i]为以s[i]结尾的最长正确括号子串长度,对s[i]和s[i-1]分情况
 #注意到最长正确括号串的特殊性质知: 当s[i]==s[i-1]==')'时,与s[i]配对的只可能是s[i-1-dp[i-1]]
 #以s[i]结尾的正确括号串必包含以s[i-1]结尾的正确括号串, 且长度至少增加2
@@ -113,6 +114,14 @@ class SolutionOfDp:
             res = max(res, dp[i])
         return res
         # write code here
+#栈解法 
+#始终保持栈底元素为当前已经遍历过的元素中「最后一个没有被匹配的右括号的下标」,其他元素为依次加入的左括号的下标
+#1、对于每个'(' ,将它的下标放入栈中
+#2、对于每个')' ，先弹出栈顶元素表示匹配了当前右括号 (用下面的trick可保证遇到')'时栈定不空)：
+#    如果栈为空，说明当前的右括号为没有被匹配的右括号，将其下标放入栈中来更新我们之前提到的「最后一个没有被匹配的右括号的下标」
+#    如果栈不为空，当前右括号的下标减去栈顶元素即为「以该右括号为结尾的最长有效括号的长度」(这是由于此时的栈顶元素必是以以该右括号为结尾的最长有效括号子串的前一个字符下标)
+#3、从前往后遍历字符串并更新答案即可
+#trick:由于一开始栈为空,若第一个字符为左括号我们会将其放入栈中,就不满足提及的「最后一个没有被匹配的右括号的下标」,为了保持统一,我们在一开始的时候往栈中放入-1(相当于虚拟'('的下标)
  class SolutionOfStack:
     def longestValidParentheses(self , s ):
         stack = [-1]
@@ -131,6 +140,36 @@ class SolutionOfDp:
                     # 将其下标放入栈中
                     stack[-1] = i
         return ans
+        # write code here
+#双指针解法
+#利用两个计数器 left 和 right
+#从左到右遍历字符串: 对于每个'(',left+1, 对于每个')',right+1; 判断left与right大小, 若相等,计算当前有效字符串的长度: 2*right;若right > left, 将left,right置0
+#IMPORTANT: 这样的做法贪心地考虑了以当前字符下标结尾的有效括号串长度, 每次当右括号数量多于左括号数量的时候之前的字符都扔掉不再考虑, 重新从下一个字符开始计算
+#但这样会漏掉一种情况：左括号的数量始终大于右括号的数量, 如((), 此时最长有效括号是求不出来的
+#IMPORTANT: 只需要 再从右往左遍历用类似的方法计算即可,但此时判断条件反了过来
+class SolutionOfDoubPointer:
+    def longestValidParentheses(self , s: str) -> int:
+        left = right = maxlength = 0
+        for i in range(len(s)):
+            if s[i] == '(':
+                left += 1
+            else:
+                right += 1
+            if left == right:
+                maxlength = max(maxlength, 2 * right)
+            elif right > left:
+                left = right = 0
+        left = right = 0
+        for i in range(len(s)-1, -1, -1):
+            if s[i] == '(':
+                left += 1
+            else:
+                right += 1
+            if left == right:
+                maxlength = max(maxlength, 2 * left);
+            elif left > right:
+                left = right = 0
+        return maxlength
         # write code here
 ################################################
 #请实现支持'?'和'*'的通配符模式匹配，'?' 可以匹配任何单个字符(即长度为1)；'*' 可以匹配任何字符序列（包括空序列）
