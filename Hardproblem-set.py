@@ -192,3 +192,29 @@ class Solution:
                     dp[i][j] = dp[i-1][j] or dp[i][j-1]          #IMPORTANT: 如果p[j]是星号则:1.不使用这个星号，dp[i][j]=dp[i][j-1]转移过来; 2.使用这个星号,dp[i][j]=dp[i-1][j]
         return dp[-1][-1]
         # write code here
+################################################
+#给定两个字符串str1和str2，再给定三个整数ic，dc和rc，分别代表插入、删除和替换一个字符的代价，请输出将str1编辑成str2的最小代价，0≤ ic,dc,rc ≤10000
+#
+# min edit cost
+# @param str1 string字符串 the string
+# @param str2 string字符串 the string
+# @param ic int整型 insert cost
+# @param dc int整型 delete cost
+# @param rc int整型 replace cost
+# @return int整型
+class Solution:
+    def minEditCost(self , str1 , str2 , ic , dc , rc ):
+        lenth1, lenth2 = len(str1), len(str2)
+        dp = [[0] * (lenth2+1) for i in range(lenth1+1)]
+        for i in range(1, lenth1+1):
+            dp[i][0] = i * dc
+        for j in range(1, lenth2+1):
+            dp[0][j] = j * ic
+        for i in range(1, lenth1+1):
+            for j in range(1, lenth2+1):
+                #对str1的最后一个位置的最后一次操作分类讨论
+                if str1[i-1] == str2[j-1]: dp[i][j] = dp[i-1][j-1]
+                else:
+                    dp[i][j] = min(dp[i-1][j-1] + rc, dp[i-1][j] + dc, dp[i][j-1] + ic)     #IMPORTANT
+        return dp[-1][-1]
+        # write code here
