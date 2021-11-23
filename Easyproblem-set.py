@@ -309,3 +309,28 @@ class Solution:
             i += 1
         return mat
         # write code here
+###################################################
+#定义栈的数据结构，请在该类型中实现一个能够得到栈中所含最小元素的 min 函数，输入操作时保证 pop、top 和 min 函数操作时，栈中一定有元素
+#要求：栈的各个操作的时间复杂度是O(1)，空间复杂度是O(n)
+# -*- coding:utf-8 -*-
+class Solution:
+    def __init__(self, items = [], minHelp = []):
+        self.items = items
+        self.mins = minHelp  #KEY: 始终维持栈顶元素为当前最小值
+    def push(self, node):
+        self.items.append(node)
+        if not self.mins: self.mins.append(node)
+        elif node <= self.mins[-1]:
+            self.mins.append(node)
+        # write code here
+    def pop(self):
+        tmp = self.items.pop()
+        if tmp == self.mins[-1]:   #IMPORTANT: 判断出栈元素是否为最小值,若是则更新self.mins
+            self.mins.pop()
+        # write code here
+    def top(self):
+        return self.items[-1]
+        # write code here
+    def min(self):
+        return self.mins[-1]
+        # write code here
