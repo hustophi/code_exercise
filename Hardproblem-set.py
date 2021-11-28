@@ -246,3 +246,47 @@ class Solution:
             root.left = self.DeserializeTree(list)#左节点
             root.right = self.DeserializeTree(list)#右节点
         return root
+################################################
+#给定一棵树，求出这棵树（不一定是二叉树）的直径，即树上最远两点的距离
+# class Interval:
+#     def __init__(self, a=0, b=0):
+#         self.start = a
+#         self.end = b
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# 树的直径
+# @param n int整型 树的节点个数
+# @param Tree_edge Interval类一维数组 树的边
+# @param Edge_value int整型一维数组 边的权值
+# @return int整型
+#IMPORTANT:在一个连通无向无环图中，以任意结点出发所能到达的最远结点，一定是该图直径的端点之一，故可以做两次DFS来计算树的直径
+class Solution:
+    def solve(self , n: int, Tree_edge: List[Interval], Edge_value: List[int]) -> int:
+        graph = reconstruct(n, Tree_edge, Edge_value)
+        used = [0] * n
+        remote, _ = dfs(graph, 0, used)
+        _, maxlen = dfs(graph, remote, used)
+        return maxlen
+def reconstruct(n, Tree_edge, Edge_value):       #使用图的邻接表存储形式
+    graph = {}                                   #{vertex:{vertex:weight}}
+    for i in range(len(Tree_edge)):
+        v1, v2 , w = Tree_edge[i].start, Tree_edge[i].end, Edge_value[i]
+        graph[v1] = graph.get(v1, {})
+        graph[v2] = graph.get(v2, {})
+        graph[v1][v2] = graph[v2][v1] = w
+    return graph
+def dfs(graph, iniVertex, used):  #回溯, 求离iniVertex最远的点及二者的距离
+    remote, maxlen = iniVertex, 0 #初始化
+    used[iniVertex] = 1           #used列表记录当前路径中已使用的节点, 避免冗余计算
+    for v in graph[iniVertex]:
+        if used[v]: continue
+        used[v] = 1
+        tmp_v, pathlen = dfs(graph, v, used)
+        used[v] = 0               #探索完一种可能后还原
+        if pathlen + graph[iniVertex][v] > maxlen:  #判断, 更新最远点即最远距离
+            remote = tmp_v
+            maxlen = pathlen + graph[iniVertex][v]
+    used[iniVertex] = 0
+    return remote, maxlen
+        # write code here
+################################################
