@@ -218,3 +218,31 @@ class Solution:
                     dp[i][j] = min(dp[i-1][j-1] + rc, dp[i-1][j] + dc, dp[i][j-1] + ic)     #IMPORTANT
         return dp[-1][-1]
         # write code here
+################################################
+#请实现两个函数，分别用来序列化和反序列化二叉树，要求能够根据序列化之后的字符串重新构造出一棵与原二叉树相同的树
+# -*- coding:utf-8 -*-
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+class Solution:
+    def Serialize(self, root):
+        if not root:
+            return '#'
+        return str(root.val)+','+self.Serialize(root.left)+','+self.Serialize(root.right)  #先序遍历,递归生成序列化字符串,None节点记为#
+        # write code here
+    def Deserialize(self, s):#反序列化
+        list = s.split(',')#利用split和逗号分隔，并放入列表中
+        return self.DeserializeTree(list)#直接返回列表的反序列化值
+        # write code here
+    def DeserializeTree(self, list):#建立反序列二叉树的函数
+        if len(list) <= 0:
+            return None
+        val = list.pop(0)
+        root = None
+        if val != '#':#如果不是空节点，
+            root = TreeNode(int(val))
+            root.left = self.DeserializeTree(list)#左节点
+            root.right = self.DeserializeTree(list)#右节点
+        return root
