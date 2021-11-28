@@ -289,4 +289,28 @@ def dfs(graph, iniVertex, used):  #回溯, 求离iniVertex最远的点及二者�
     used[iniVertex] = 0
     return remote, maxlen
         # write code here
+#法2, 图的构建同法1
+class Solution:
+    def __init__(self):
+        self.maxPath = 0
+    def solve(self , n: int, Tree_edge: List[Interval], Edge_value: List[int]) -> int:
+        graph = reconstruct(n, Tree_edge, Edge_value)
+        used = [0] * n
+        self.dfs(graph, 0, used)
+        return self.maxPath
+    def dfs(self, graph, iniVertex, used):  #回溯, 求离iniVertex最远的点及二者的距离
+        used[iniVertex] = 1
+        d1, d2 = 0, 0    #d1, d2分别为当前未遍历节点距iniVertex的最远距离和次远距离
+        for v in graph[iniVertex]:
+            if used[v]: continue
+            used[v] = 1
+            tmp = self.dfs(graph, v, used)
+            tmp += graph[iniVertex][v]
+            if tmp >= d1: d1, d2 = tmp, d1  #IMPORTANT: 更新d1, d2
+            elif tmp > d2: d2 = tmp
+            used[v] = 0
+            self.maxPath = max(self.maxPath, d1 + d2)  #整棵树的直径为所有节点d1+d2的最大值
+        used[iniVertex] = 0
+        return d1
+        # write code here
 ################################################
