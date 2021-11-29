@@ -260,6 +260,9 @@ class Solution:
 # @param Edge_value int整型一维数组 边的权值
 # @return int整型
 #IMPORTANT:在一个连通无向无环图中，以任意结点出发所能到达的最远结点，一定是该图直径的端点之一，故可以做两次DFS来计算树的直径
+from collections import defaultdict
+#defaultdict接受一个factory_function作为参数
+#这个factory_function可以是list、set、str等,作用是当key不存在时,返回的是factory_function的默认值,如list对应[],str对应空字符串,set对应set(),int对应0
 class Solution:
     def solve(self , n: int, Tree_edge: List[Interval], Edge_value: List[int]) -> int:
         graph = reconstruct(n, Tree_edge, Edge_value)
@@ -268,11 +271,9 @@ class Solution:
         _, maxlen = dfs(graph, remote, used)
         return maxlen
 def reconstruct(n, Tree_edge, Edge_value):       #使用图的邻接表存储形式
-    graph = {}                                   #{vertex:{vertex:weight}}
+    graph = defaultdict(dict)                                   #{vertex:{vertex:weight}}
     for i in range(len(Tree_edge)):
         v1, v2 , w = Tree_edge[i].start, Tree_edge[i].end, Edge_value[i]
-        graph[v1] = graph.get(v1, {})
-        graph[v2] = graph.get(v2, {})
         graph[v1][v2] = graph[v2][v1] = w
     return graph
 def dfs(graph, iniVertex, used):  #回溯, 求离iniVertex最远的点及二者的距离
