@@ -269,7 +269,8 @@ class Solution:
         used = [0] * n
         remote, _ = dfs(graph, 0, used)
         _, maxlen = dfs(graph, remote, used)
-        return maxlen
+        find_path(graph, remote, used, 0, maxlen, path)
+        return maxlen, [remote]+ maxPath     #返回直径和对应的路径
 def reconstruct(n, Tree_edge, Edge_value):       #使用图的邻接表存储形式
     graph = defaultdict(dict)                                   #{vertex:{vertex:weight}}
     for i in range(len(Tree_edge)):
@@ -289,6 +290,18 @@ def dfs(graph, iniVertex, used):  #回溯, 求离iniVertex最远的点及二者�
             maxlen = pathlen + graph[iniVertex][v]
     used[iniVertex] = 0
     return remote, maxlen
+def find_path(graph, vertex, used, tmpSum, target, path):
+    global maxPath
+    used[vertex] = 1
+    for v in graph[vertex]:
+        if used[v]: continue
+        path.append(v)
+        used[v] = 1
+        tmp = tmpSum + graph[vertex][v]
+        if tmp == target: maxPath = path.copy()
+        find_path(graph, v, used, tmp, target, path)
+        used[v] = 0
+        path.pop()
         # write code here
 #法2, 图的构建同法1
 class Solution:
