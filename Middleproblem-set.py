@@ -670,3 +670,26 @@ class Solution:
             heapq.heappush(endTime, party[1]) #更新优先队列
         return n
         # write code here
+###################################################
+#给定一个长度为n的数组nums，数组由一些非负整数组成，现需要将他们进行排列并拼接，每个数不可拆分，使得最后的结果最大，返回值需要是string类型，否则可能会溢出
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# 最大数
+# @param nums int整型一维数组 
+# @return string字符串
+#定义新的排序规则,使得排序后的字符串数组 依次拼接 所得总串的字典序在所有拼接方案中最大
+from functools import cmp_to_key
+#cmp_to_key将旧式比较函数转换为关键函数 key function
+#具体用法参考https://my.oschina.net/u/4346073/blog/3673092
+class Solution:
+    def solve(self , nums: List[int]) -> str:
+        nums = [str(num) for num in nums]
+        nums.sort(key= cmp_to_key(cmp))
+        return ''.join(nums) if nums[0] != '0' else '0'
+def cmp(a, b):        #IMPORTANT: 新的排序规则
+    if a + b == b + a:
+        return 0    #返回0,即在新的规则下a==b
+    elif a + b < b + a:
+        return 1    #返回1,即在新的规则下a>b
+    else:
+        return -1   #返回-1,即在新的规则下a<b
+        # write code here
