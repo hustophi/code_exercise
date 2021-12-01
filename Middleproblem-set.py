@@ -687,9 +687,9 @@ class Solution:
         return ''.join(nums) if nums[0] != '0' else '0'
 def cmp(a, b):        #IMPORTANT: 新的排序规则
     if a + b == b + a:
-        return 0    #返回0,即在新的规则下a==b
+        return 0    #返回0,表示在新的规则下a==b
     elif a + b < b + a:
-        return 1    #返回1,即在新的规则下a>b
+        return 1    #返回1,表示在新的规则下a>b
     else:
-        return -1   #返回-1,即在新的规则下a<b
+        return -1   #返回-1,表示在新的规则下a<b
         # write code here
