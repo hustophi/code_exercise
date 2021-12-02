@@ -712,3 +712,29 @@ class Solution:
         return ans
         # write code here
 ###################################################
+#给定一棵完全二叉树的头节点head，返回这棵树的节点个数(完全二叉树指：设二叉树的深度为h(根节点记为第一层)，则 [1,h-1] 层的节点数都满足 2^(i-1))
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# @param head TreeNode类 
+# @return int整型
+#二分：注意到 一棵完全二叉树的左右子树一定有一边是满二叉树，另一边至少也是完全二叉树
+#所以当左右子树高度相等时(即满二叉树)可直接计算, 因此在递归的过程中实际上只会沿着其中的一个方向不断递归,时间复杂度logN * logN
+class Solution:
+    def nodeNum(self , head: TreeNode) -> int:
+        if not head: return 0
+        lh = rh = 0
+        curNode = head
+        while curNode != None:
+            curNode = curNode.left
+            lh += 1
+        curNode = head
+        while curNode != None:
+            curNode = curNode.right     #由于是完全二叉树,计算高度可不用递归
+            rh += 1
+        if lh == rh: return pow(2, lh) - 1
+        return 1 + self.nodeNum(head.left) + self.nodeNum(head.right)
