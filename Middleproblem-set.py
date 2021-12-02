@@ -693,3 +693,22 @@ def cmp(a, b):        #IMPORTANT: 新的排序规则
     else:
         return -1   #返回-1,表示在新的规则下a<b
         # write code here
+###################################################
+#圆圈中最后剩下的数,即约瑟夫环问题, 空间复杂度O(1)
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# @param n int整型 
+# @param m int整型 
+# @return int整型
+#KEY: f(n,m) = (f(n-1,m) + m) % n, f(n, m) 表示最终留下元素的索引
+#若x = f(n - 1, m),则长度为 n 的序列最后一个删除的元素,应当是从 m % n 开始数的第 x 个元素,因此有 f(n, m) = (m % n + x) % n = (m + x) % n
+class Solution:
+    def LastRemaining_Solution(self , n: int, m: int) -> int:
+        i = 1
+        ans = 0
+        while i < n:
+            i += 1
+            ans = (ans + m) % i
+        return ans
+        # write code here
+###################################################
