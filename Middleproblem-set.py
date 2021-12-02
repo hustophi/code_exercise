@@ -738,3 +738,29 @@ class Solution:
             rh += 1
         if lh == rh: return pow(2, lh) - 1
         return 1 + self.nodeNum(head.left) + self.nodeNum(head.right)
+###################################################
+#给你一个 1 到 n 的排列和一个栈，并按照排列顺序入栈
+#在不打乱入栈顺序的情况下，输出字典序最大的出栈序列
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+#
+# 栈排序
+# @param a int整型一维数组 描述入栈顺序
+# @return int整型一维数组
+#KEY: 按照读入顺序入栈,如果当前入栈第i个数字比将要入栈的剩余元素都要大, 则不断弹出栈中元素,直到栈顶元素小于比将要入栈的剩余元素最大值, 遍历完后弹出栈中所有元素
+class Solution:
+    def solve(self , a: List[int]) -> List[int]:
+        if not a: return []
+        monoStack = [0] * len(a)
+        maxNum = -1
+        for i in range(len(a)):
+            monoStack[-i-1] = maxNum = max(maxNum, a[-i-1])   #从后往前遍历, monoStack[i]为a[i:n]中最大值
+        res = []
+        stack = []
+        for i in range(len(a)):
+            stack.append(a[i])
+            while i < len(a)-1 and stack and stack[-1] > monoStack[i+1]: res.append(stack.pop())    #IMPORTANT:只需对前n-1个元素判断
+        while stack:
+            res.append(stack.pop())
+        return res
+        # write code here
