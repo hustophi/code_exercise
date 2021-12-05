@@ -372,3 +372,36 @@ class Solution:
         idx = (x // m) * m + y // m
         return idx
         # write code here
+################################################
+#请实现一个函数用来匹配包括'.'和'*'的正则表达式。模式中的字符'.'表示任意一个字符，而'*'表示它前面的字符可以出现任意次（包含0次）
+#在本题中，匹配是指字符串的所有字符匹配整个模式, str和pattern格式说明如下:
+#1.str 可能为空，且只包含从 a-z 的小写字母。
+#2.pattern 可能为空，且只包含从 a-z 的小写字母以及字符'.' 和'*'，无连续的'*'且'*'前必须有字符
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# @param str string字符串 
+# @param pattern string字符串 
+# @return bool布尔型
+#dp[i][j]表示字符串str的前i个字符和模式串pattern的前j个字符是否能匹配
+class Solution:
+    def match(self , str: str, pattern: str) -> bool:
+        if str and not pattern: return False
+        lenS, lenP = len(str), len(pattern)
+        dp = [[False] * (lenP+1) for i in range(lenS+1)]
+        dp[0][0] = True
+        for j in range(1, lenP+1):
+            if  not j % 2 and pattern[j-1] == '*': dp[0][j] = True
+        if str and (pattern[0] == '.' or pattern[0] == str[0]): dp[1][1] = True
+        for i in range(1, lenS+1):
+            for j in range(2, lenP+1):
+                if pattern[j-1] != '*':
+                    if pattern[j-1] == str[i-1] or pattern[j-1] == '.':
+                        dp[i][j] = dp[i-1][j-1]
+                #IMPORTANT: 当pattern[j-1] 为"*"的时候,如pattern[j-2:j]为 'b*',将其作为整体并分情况讨论
+                else: 
+                    if pattern[j-2] == '.' or pattern[j-2] == str[i-1]:
+                        dp[i][j] = dp[i-1][j] or dp[i][j-2]       #KEY: 'b*' 匹配完后,继续使用 or 舍弃
+                    else:
+                        dp[i][j] = dp[i][j-2]
+        return dp[-1][-1]
+        # write code here
