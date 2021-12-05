@@ -334,3 +334,21 @@ class Solution:
     def min(self):
         return self.mins[-1]
         # write code here
+###################################################
+#给定一个无序数组，包含正数、负数和 0 ，请从中找出 3 个数，使得乘积最大，返回这个乘积
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# 最大乘积
+# @param A int整型一维数组 
+# @return long长整型
+#三个数的最大乘积来源可能有两种
+#第一种：最大的三个都是正数，即三个最大的数相乘
+#第二种：绝对值最大的三个数中有两个负数，即两个最小的数和一个最大的数相乘
+class Solution:
+    def solve(self , A: List[int]) -> int:
+        A.sort()
+        A1 = A[0] *A[1] * A[2]
+        A2 = A[0] *A[1] * A[-1]
+        A3 = A[-1] *A[-2] * A[-3]
+        return max(A1,A2,A3)
+        # write code here
