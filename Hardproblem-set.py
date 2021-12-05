@@ -400,7 +400,7 @@ class Solution:
                 #IMPORTANT: 当pattern[j-1] 为"*"的时候,如pattern[j-2:j]为 'b*',将其作为整体并分情况讨论
                 else: 
                     if pattern[j-2] == '.' or pattern[j-2] == str[i-1]:
-                        dp[i][j] = dp[i-1][j] or dp[i][j-2]       #KEY: 'b*' 匹配完后,继续使用 or 舍弃
+                        dp[i][j] = dp[i-1][j] or dp[i][j-2]       #KEY: 'b*' 匹配b至少1次 or 0次
                     else:
                         dp[i][j] = dp[i][j-2]
         return dp[-1][-1]
