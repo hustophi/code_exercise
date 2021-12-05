@@ -328,3 +328,47 @@ class Solution:
         return d1
         # write code here
 ################################################
+#给数独中的剩余的空格填写上数字, 空格用字符'.'表示 (假设给定的数独只有唯一的解法)
+# @param board char字符型二维数组 
+# @return void
+#
+import math
+class Solution:
+    def __init__(self):
+        self.rows, self.cols, self.miniBoard = [], [], []
+    def solveSudoku(self , board ):
+        r = c = len(board)
+        self.rows, self.cols, self.miniBoard = [set() for i in range(r)], [set() for i in range(r)], [set() for i in range(r)]
+        remain = []
+        for i in range(r):
+            for j in range(c):
+                if board[i][j] != '.':
+                    self.rows[i].add(board[i][j])
+                    self.cols[j].add(board[i][j])
+                    idx = self.posToId(i, j, r)
+                    self.miniBoard[idx].add(board[i][j])
+                else: remain.append((i,j))
+        self.dfs(board, c, remain, 0)
+        return
+    def dfs(self, board, c, remain, loc):       #判断当前board状态下remain[loc:]能否合法填完
+        if loc == len(remain): return True
+        sr, sc = remain[loc]
+        for n in range(1, c+1):
+            idx = self.posToId(sr, sc, c)
+            if str(n) not in self.rows[sr] and str(n) not in self.cols[sc] and str(n) not in self.miniBoard[idx]:
+                board[sr][sc] = str(n)
+                self.rows[sr].add(str(n))
+                self.cols[sc].add(str(n))
+                self.miniBoard[idx].add(str(n))
+                if not self.dfs(board, c, remain, loc+1):        #回溯
+                    self.rows[sr].remove(str(n))
+                    self.cols[sc].remove(str(n))
+                    self.miniBoard[idx].remove(str(n))
+                    board[sr][sc] = '.'
+                else: return True                   #IMPORTANT
+        return False
+    def posToId(self, x, y, r):
+        m = int(math.sqrt(r))
+        idx = (x // m) * m + y // m
+        return idx
+        # write code here
