@@ -352,3 +352,27 @@ class Solution:
         A3 = A[-1] *A[-2] * A[-3]
         return max(A1,A2,A3)
         # write code here
+###################################################
+#给定一棵二叉搜索树，请找出其中第 k 大的节点的值
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def __init__(self):
+        self.ans = 0    #新建类变量记录答案
+    def kthLargest(self, root: TreeNode, k: int) -> int:
+        self.k = k
+        self.interOrder(root)
+        return self.ans
+    def interOrder(self, root):
+        if root:
+            self.interOrder(root.right)
+            if self.k > 0:      #当且仅当k>0时, 说明还未遍历到第k大节点, 才需要继续更新
+                self.ans = root.val
+                self.k -= 1     #递归遍历时计数, 新建一个类变量k, 每遍历到一个节点, 计数变量-1
+            if self.k == 0: return  #当k==0时, 当前节点即为所求, 直接返回
+            self.interOrder(root.left)
