@@ -764,3 +764,40 @@ class Solution:
             res.append(stack.pop())
         return res
         # write code here
+###################################################
+#输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。
+#如果是则返回 true，否则返回 false。假设输入的数组的任意两个数字都互不相同
+#法一：分治+递归, O(N^2)
+#法二：单调栈, O(N), 算法流程如下：
+#初始化： 单调栈 stackstack ，父节点值 root = +∞ （初始值为正无穷大，可把树的根节点看为此无穷大节点的左孩子）；
+#倒序遍历 postorderpostorder ：记每个节点为 r_i
+#判断： 若 r_i>root，说明此后序遍历序列不满足二叉搜索树定义，直接返回 false
+#更新父节点 rootroot ： 当栈不为空 且 r_i<stack.peek()时，循环执行出栈，并将出栈节点赋给 root 
+#入栈： 将当前节点 r_i入栈；
+#若遍历完成，则说明后序遍历满足二叉搜索树定义，返回 true
+class Solution_recur:
+    def verifyPostorder(self, postorder: List[int]) -> bool:
+        return self.partition(postorder, 0, len(postorder)-1)
+    def partition(self, postorder, l, r):
+        flag = True
+        if l >= r: return flag
+        left, right = l, r-1
+        while flag and left <= right:
+            while flag and left <= right and postorder[left] < postorder[r]:
+                left += 1
+            while flag and left <= right and postorder[right] > postorder[r]:
+                right -= 1
+            if left < right: flag = False
+        return flag and self.partition(postorder, l, right) and \
+                self.partition(postorder, right+1, r-1)
+class Solution_monoStack:
+    def verifyPostorder(self, postorder: List[int]) -> bool:
+        #单调栈O(n)
+        stack, root = [], float('inf')
+        postorder.reverse()
+        for num in postorder:
+            if num > root: return False
+            while stack and num < stack[-1]:
+                root = stack.pop()
+            stack.append(num)
+        return True
