@@ -770,7 +770,7 @@ class Solution:
 #法一：分治+递归, O(N^2)
 #法二：单调栈, O(N), 算法流程如下：
 #初始化： 单调栈 stackstack ，父节点值 root = +∞ （初始值为正无穷大，可把树的根节点看为此无穷大节点的左孩子）；
-#倒序遍历 postorderpostorder ：记每个节点为 r_i
+#倒序遍历 postorder ：记每个节点为 r_i
 #判断： 若 r_i>root，说明此后序遍历序列不满足二叉搜索树定义，直接返回 false
 #更新父节点 rootroot ： 当栈不为空 且 r_i<stack.peek()时，循环执行出栈，并将出栈节点赋给 root 
 #入栈： 将当前节点 r_i入栈；
@@ -801,3 +801,51 @@ class Solution_monoStack:
                 root = stack.pop()
             stack.append(num)
         return True
+###################################################
+#已知一棵节点个数为 n 的二叉树的中序遍历单调递增, 求该二叉树能能有多少种树形, 输出答案对 109 +7 取模
+#法一：动态规划
+#法二：卡特兰数
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# 计算二叉树个数
+# @param n int整型 二叉树结点个数
+# @return int整型
+#
+class Solution_dp:
+    def numberOfTree(self , n: int) -> int:
+        # write code here
+        dp = [0] * (n + 1)          #dp[i]表示有i个节点时，共有多少种树形
+        dp[0] = 1
+        for i in range(1, n+1):
+            for j in range(0, i):
+                dp[i] = (dp[i] + dp[j] * dp[i-1-j] % 1000000007) % 1000000007
+        return dp[-1]
+class Solution_cartelan:
+    #卡特兰数参考https://blog.nowcoder.net/n/46bb5cecb4e1444489ed20a796ef70a5?f=comment
+    factor = [1] * 200010
+    mod = 1000000007
+    def qp(self, a, b):
+        ans = 1
+        a %= self.mod
+        while b:
+            if b & 1:ans = ans * a % self.mod
+            b >>= 1
+            a = a * a % self.mod
+        return ans
+    
+    def C(self, n, m):
+        if n < m: return 0
+        return self.factor[n] * self.qp(self.factor[m] * self.factor[n-m], self.mod-2) % self.mod
+    
+    def Lucas(self, n, m):
+        if m == 0: return 1
+        return self.C(n % self.mod, m % self.mod) * self.Lucas(n // self.mod, m // self.mod)
+
+    def numberOfTree(self , n: int) -> int:
+        # write code here
+        self.factor[0] = self.factor[1] = 1
+        for i in range(2, 2 * n + 1):
+            self.factor[i] = self.factor[i-1]*i%self.mod
+        ans = (self.Lucas(2*n,n) - self.Lucas(2*n,n+1)) % self.mod
+        if ans < 0: ans += self.mod
+        return ans
