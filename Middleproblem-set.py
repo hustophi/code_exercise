@@ -816,7 +816,7 @@ class Solution_dp:
         # write code here
         dp = [0] * (n + 1)          #dp[i]表示有i个节点时，共有多少种树形
         dp[0] = 1
-        for i in range(1, n+1):
+        for i in range(1, n+1):     #对根节点大小分类
             for j in range(0, i):
                 dp[i] = (dp[i] + dp[j] * dp[i-1-j] % 1000000007) % 1000000007
         return dp[-1]
@@ -849,3 +849,26 @@ class Solution_cartelan:
         ans = (self.Lucas(2*n,n) - self.Lucas(2*n,n+1)) % self.mod
         if ans < 0: ans += self.mod
         return ans
+###################################################
+#将整数 n 分成 k 份，且每份不能为空，任意两个方案不能相同(不考虑顺序)，问有多少种不同的分法, 答案对 109 + 7 取模
+#法一动态规划：dp[i][j]表示数字i分为j份总共有多少种分法，根据每份不能为空，我们可以将划分的情况分为两种:
+#1. 至少有一份分配了数字1; 2. 所有的份数都没有分配数字1（如果没有分配数字1，必然分配了大于1的数字）
+#如果没有分配数字1，那么我们一定可以给j份都提前放一个数字1，剩下的就是dp[i][j-i]
+#
+#法二：隔板法直接计算
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+#
+# @param n int整型 被划分的数
+# @param k int整型 化成k份
+# @return int整型
+#
+class Solution:
+    def divideNumber(self , n: int, k: int) -> int:
+        # write code here
+        dp = [[0] * n for i in range(k)]    #此处dp[i][j]表示j+1分成i+1份的方案数
+        dp[0] = [1] * n
+        for i in range(1, k):
+            for j in range(i, n):
+                dp[i][j] = (dp[i-1][j-1] % 1000000007 + dp[i][j-i-1] % 1000000007) % 1000000007
+        return dp[-1][-1]
+###################################################
