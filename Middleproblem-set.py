@@ -872,3 +872,70 @@ class Solution:
                 dp[i][j] = (dp[i-1][j-1] % 1000000007 + dp[i][j-i-1] % 1000000007) % 1000000007
         return dp[-1][-1]
 ###################################################
+#给定一个二叉树root和一个整数值 sum ，求该树有多少路径的的节点值之和等于 sum 。
+#该题路径定义不需要从根节点开始，也不需要在叶子节点结束，但是一定是从父亲节点往下到孩子节点
+#法一：两次dfs，基于路径是否包含根节点讨论
+#法二：一次dfs+hash表记录当前路径和
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+#
+# @param root TreeNode类 
+# @param sum int整型 
+# @return int整型
+#
+class Solution_dfs:
+    def FindPath(self , root: TreeNode, sum: int) -> int:
+        ret = 0
+        if not root: return 0
+        #若路径不包含根节点
+        if root.left: ret += self.FindPath(root.left, sum)
+        if root.right: ret += self.FindPath(root.right, sum)
+        ret += self.dfs(root, sum)      #若路径以root开始
+        return ret
+    def dfs(self, root, sum):
+        '''以root开始的路径和为sum的路径条数'''
+        if not root: return 0
+        ret = 0
+        if root.val == sum: ret += 1    #若路径只包含一个节点
+        #若路径包含两个以上节点
+        if root.left: ret += self.dfs(root.left, sum - root.val)
+        if root.right: ret += self.dfs(root.right, sum - root.val)
+        return ret
+class Solution_hashDFS:
+    def __init__(self):
+        #记录路径和及条数
+        self.mp = dict()
+        
+    #last为到上一层为止的累加和
+    def dfs(self, root: TreeNode, sum: int, last: int) -> int:
+        #空结点直接返回
+        if root is None: 
+            return 0
+        res = 0
+        #到目前结点为止的累加和
+        temp = root.val + last; 
+        #如果该累加和减去sum在哈希表中出现过，相当于减去前面的分支
+        if (temp - sum) in self.mp:
+            #加上有的路径数
+            res += self.mp[temp - sum] 
+        #增加该次路径和
+        if temp in self.mp:
+            self.mp[temp] += 1
+        else:
+            self.mp[temp] = 1 
+        #进入子结点
+        res += self.dfs(root.left, sum, temp) 
+        res += self.dfs(root.right, sum, temp) 
+        #回退该路径和，因为别的树枝不需要这边存的路径和
+        self.mp[temp] -= 1 
+        return res
+    
+    def FindPath(self , root: TreeNode, sum: int) -> int:
+        #路径和为0的有1条
+        self.mp[0] = 1
+        return self.dfs(root, sum, 0) 
