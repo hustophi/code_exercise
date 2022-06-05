@@ -939,3 +939,51 @@ class Solution_hashDFS:
         #路径和为0的有1条
         self.mp[0] = 1
         return self.dfs(root, sum, 0) 
+###################################################
+#给定一个字符串s，字符串s只包含以下三种字符: (，*，)，请你判断 s是不是一个合法的括号字符串。合法括号字符串有如下规则:
+#1.左括号'('必须有对应的右括号')'；2.右括号')'必须有对应的左括号'('；3.左括号必须在对应的右括号前面；
+#4.*可以视为单个左括号，也可以视为单个右括号，或者视为一个空字符；5.空字符串也视为合法的括号字符串
+#法一：利用两个栈存储 ( 和 * 并模拟匹配过程
+#注1：如果遇到右括号，则需要有一个左括号或星号和右括号匹配，由于星号也可以看成右括号或者空字符串，因此当前的右括号应优先和左括号匹配，没有左括号时才和星号匹配
+#注2：最终遍历完，可能两个栈中还有值。为了将每个左括号匹配，需要将星号看成右括号，且每个左括号必须出现在其匹配的星号之前。
+#当两个栈都不为空时，每次从左括号栈和星号栈分别弹出栈顶元素，对应左括号下标和星号下标，若左括号下标小于星号下标则可匹配，否则返回 false；最终判断左括号栈是否为空
+#
+#法二：贪心匹配
+#正序和倒序遍历两遍，分别把星号当做左括号和右括号。
+#从左往右遍历，把星号视为左括号，在遍历的过程中如果出现左括号数量比右括号数量少就返回false（说明即使将 * 作为左括号时，右括号还有剩余）
+#然后从右往左遍历，把星号视为右括号，在遍历的过程中如果出现右括号数量比左括号少就返回false（说明即使将 * 作为右括号时，左括号还有剩余）
+#若未返回false，则说明匹配成功，多余的 * （如果有的话）可以作为空字符，返回true
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+#
+# @param s string字符串 
+# @return bool布尔型
+#
+class Solution_stack:
+    def isValidString(self , s: str) -> bool:
+        # write code here
+        left, star = [], []
+        for i in range(len(s)):
+            if s[i] == '(': left.append(i)
+            elif s[i] == '*': star.append(i)
+            else:
+                if left: left.pop()
+                elif star: star.pop()
+                else: return False
+        while left and star:    #类似于((())(**(()*()
+            if left.pop() > star.pop(): return False
+        return not left
+    
+class Solution_greedy:
+    def isValidString(self , s: str) -> bool:
+        flag = 0
+        for i in range(len(s)):
+            if s[i] == ')': flag -= 1
+            else: flag += 1
+            if flag < 0: return False
+        flag = 0
+        for i in range(len(s)-1,-1,-1):
+            if s[i] == '(': flag -= 1
+            else: flag += 1
+            if flag < 0: return False
+        return True 
