@@ -415,11 +415,10 @@ class Solution:
 # 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可 
 # @param mp int整型二维数组 
 # @return int整型
-#dp[i][j]的含义是如果骑士从(i,j)出发最后走到右下角，骑士至少应该具备的血量
+#dp[i][j]的含义是如果骑士从(i,j)出发最后走到右下角，骑士至少应该具备的血量（注意：若设dp[i][j]表示(0,0)到(i,j)的最少血量，不易的转移方程）
 #从右往左, 从下往上更新dp, 最终结果即为dp[0][0]
 class Solution:
     def dnd(self , mp: List[List[int]]) -> int:
-        # write code here
         dp = [[0] * len(mp[0]) for i in range(len(mp))]
         dp[-1][-1] = max(1-mp[-1][-1], 1)
         for i in range(len(mp)-2, -1, -1):
