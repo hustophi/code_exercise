@@ -987,3 +987,326 @@ class Solution_greedy:
             else: flag += 1
             if flag < 0: return False
         return True 
+###################################################
+# 给定一个字符串形式的数字序列，请问能否由这个字符串拆分成一个累加序列。
+# 累加序列：至少包含三个数，除了最开始的两个数外，每个数都是前两个数之和。
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# @param arr string字符串 
+# @return bool布尔型
+#
+class Solution:
+    def AdditiveArray(self , arr: str) -> bool:
+        # write code here
+        if len(arr) < 3: return False
+        for i in range(1, len(arr)-1):
+            if arr[0] != '0':
+                for j in range(i+1, len(arr)):
+                    if arr[i] != '0':
+                        if self.dfs(arr, j, int(arr[:i]), int(arr[i:j])): return True
+        return False
+    def dfs(self, arr, start, a, b):    #递归判断a, b, arr能否拆分成累加序列
+        if start >= len(arr): return True
+        if arr[start] == '0': return False
+        for end in range(start+1, len(arr)+1):
+            if int(arr[start: end]) == a + b: return self.dfs(arr, end, b, int(arr[start: end]))
+        return False
+###################################################
+# 给定一个长度为 n 的整数数组 nums 和两个正整数 l 和 r ，找出 nums 中连续、非空且其中最大元素在范围 [left,right] 内的子数组数目。
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# @param nums int整型一维数组 
+# @param l int整型 
+# @param r int整型 
+# @return int整型
+#
+class Solution:
+    def countSubarray(self , nums: List[int], l: int, r: int) -> int:
+        # write code here
+        lessThanr = [0] * (1+len(nums))     
+        #lessThanr[i]为以nums[i-1]结尾的连续非空且最大值不超过r的子数组个数
+        for i in range(1, len(nums)+1):
+            if nums[i-1] <= r: lessThanr[i] = lessThanr[i-1] + 1
+        dp = [0] * (len(nums)+1)
+        ret = 0
+        for i in range(1, len(nums)+1):
+            if nums[i-1] < l: dp[i] = dp[i-1]
+            elif nums[i-1] <= r: dp[i] = lessThanr[i-1] + 1 
+            ret += dp[i]
+        return ret
+###################################################
+# 给定一个长度为 n 的正整数数组，每个元素表示一座山的高度。
+# 其中满足以下条件的连续子数组称为山脉：
+# 1.长度大于等于3
+# 2.存在下标 i ，满足 nums[0] < nums[1] < nums[2] < ... < nums[i] ， nums[i] > nums[i+1] > nums[i+2] ... > nums[i+k]
+# 请你找出最长山脉的长度
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+#
+# 
+# @param nums int整型一维数组 
+# @return int整型
+#
+class Solution:
+    def longestmountain(self , nums: List[int]) -> int:
+        # write code here
+        ret = 0
+        for i in range(len(nums)):
+            l = r = i    #以i为山峰的最长山脉，遍历i
+            while l >= 1 and nums[l] > nums[l-1]: l -= 1
+            while r <= len(nums)-2 and nums[r] > nums[r+1]: r += 1
+            ret = max(ret, r - l + 1)
+        if ret >= 3: return ret
+        else: return 0
+###################################################
+# 给定一个长度为 n 的字符串，请你重新排列这个字符串，使其每个相邻的字符都不同。
+# 你可以返回任意一个合法的结果，如果没有合法结果请返回空字符串
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# @param str string字符串 
+# @return string字符串
+#
+from collections import defaultdict
+class Solution:
+    def rearrangestring(self , str: str) -> str:
+        # write code here
+        mp = defaultdict(int)
+        ret = [''] * len(str)
+        for c in str:
+            mp[c] += 1    #统计s中每个字符出现次数
+        cntList = [list(x) for x in mp.items()]
+        cntList.sort(key= lambda x: x[1], reverse= True)    #按字符出现次数对cntList进行排序
+        if cntList[0][1] > (len(str)+1) // 2: return ''    #获取出现次数最多的字符的出现次数，判断是否有合法填充
+        data = []
+        for k, v in cntList:
+            data += [k] * v    #将排序结果，转化为字符数组data
+        ret[: : 2] = data[:(len(str)+1) // 2]    #取数组data的前后两部分，进行交叉合并
+        ret[1::2] = data[(len(str)+1) // 2:]
+        return ''.join(ret)
+###################################################
+# 给定一个长度为 n 的升序数组 nums 和两个整数 k 和 x ，从数组中找到最接近 x (两数之差最小)的 k 个数并升序输出。
+# 整数 a 比整数 b 更接近 x 需要满足 |a-x| < |b-x| 或 |a-x| = |b-x| 时 a < b
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# @param nums int整型一维数组 
+# @param k int整型 
+# @param x int整型 
+# @return int整型一维数组
+#
+from collections import deque
+class Solution:
+    def closestElement(self , nums: List[int], k: int, x: int) -> List[int]:
+        # write code here
+        if nums[0] >= x: return nums[:k]    #特判
+        if nums[-1] <= x: return nums[-k:]
+        left = self.left(nums, x)
+        right = left + 1
+        ret = deque()   #双端队列
+        while len(ret) < k and left >= 0 and right < len(nums):
+            if x - nums[left] < nums[right] - x:    #nums[left]从队首加入
+                ret.appendleft(nums[left])
+                left -= 1
+            elif x - nums[left] > nums[right] - x:  #nums[right]从队尾加入，保证ret升序
+                ret.append(nums[right])
+                right += 1
+            else:
+                ret.appendleft(nums[left])
+                left -= 1
+        while left >= 0 and len(ret) < k:
+            ret.appendleft(nums[left])
+            left -= 1
+        while right < len(nums) and len(ret) < k:
+            ret.append(nums[right])
+            right += 1
+        return list(ret)
+    def left(self, nums, x):    #寻找nums中最后一个小于等于x的数
+        l, r = 0, len(nums)-1
+        while l < r:
+            mid = (l + r) // 2
+            if nums[mid] > x: r = mid-1
+            else:
+                if nums[mid+1] <= x: l = mid+1
+                else: return mid
+        return l
+###################################################
+# 给定一个长度为 n 的字符串列表，返回他们中最长的特殊子序列的长度。
+# 特殊子序列的定义是：某个字符串的某一个子序列（不一定连续），无法在另一个字符串中找到同样的子序列则称为特殊子序列。
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# @param strs string字符串一维数组 
+# @return int整型
+#
+#对于任一字符串strs[i]，如果它的子序列sub是特殊序列，那么在sub基础上添加一些字符得到的strs[i]也是特殊序列
+#因此只要判断每个字符串是否为其他字符串的子序列并记录最大长度即可
+#判断判断字符串s是否为字符串t的子序列: 双指针i，j分别遍历s和t, 当s[i] == t[j]时, 同时右#移; 否则, 右移j; 直到字符串s或t边界结束，返回i == len(s)
+class Solution:
+    def longestUniqueSubsequence(self , strs: List[str]) -> int:
+        # write code here
+        ret = -1
+        strs.sort(key= lambda x: len(x))
+        for i in range(len(strs)):
+            flag = False
+            for j in range(len(strs)):
+                if i == j: continue
+                if flag: break
+                else: flag = self.checkSub(strs[i], strs[j])
+            if not flag: ret = max(ret, len(strs[i]))
+        return ret
+    def checkSub(self, s, t):
+        if len(s) > len(t): return False
+        i, j = 0, 0
+        while i < len(s) and j < len(t):
+            if s[i] == t[j]:
+                i += 1
+                j += 1
+            else: j += 1
+        return i == len(s)
+###################################################
+# 给定一个长度为 n 的数组 nums ，算出他所有的 min(sub) 之和，其中 sub 指数组 nums 的所有连续子数组 ， min(sub) 指子数组的最小值。结果对1000000007取模
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# @param nums int整型一维数组 
+# @return int整型
+#
+#利用 单调栈 先求左边最近且小于nums[i]和右边最近且小于等于nums[i]的索引left, right
+#以nums[i]为最小值的子数组一定满足左端点在(left[i], i]且右端点在[i, right[i])之间
+#tricks: 1.left严格小于,right不可严格小于,否则导致重复计算; 2.在数组两端添加虚拟0,方便数组长度计算
+class Solution:
+    def sumSubarr(self , nums: List[int]) -> int:
+        # write code here
+        monoStk = []    #单调递增
+        left, right = [-1] * len(nums), [len(nums)] * len(nums)
+        for i in range(len(nums)):
+            while monoStk and nums[monoStk[-1]] >= nums[i]:
+                monoStk.pop()
+            if not monoStk: left[i] = -1    #左端虚拟0
+            else: left[i] = monoStk[-1]
+            monoStk.append(i)
+        monoStk = []
+        for i in range(len(nums)-1, -1, -1):
+            while monoStk and nums[monoStk[-1]] > nums[i]:
+                monoStk.pop()
+            if not monoStk: right[i] = len(nums)    #右端虚拟0
+            else: right[i] = monoStk[-1]
+            monoStk.append(i)
+        ret = 0
+        for i in range(len(nums)):
+            ret = (ret + nums[i] * (i-left[i]) * (right[i]-i) % 1000000007) % 1000000007
+        return ret
+###################################################
+# 给定两个字符串 s 和 p ，请你找到 s 子数组中的全部 p 的异位词的起始点。异位词指可以通过重新排列字符顺序（或者不排列）而相等的词。可以以任意顺序返回
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# @param s string字符串 
+# @param p string字符串 
+# @return int整型一维数组
+#
+#利用前缀和思想计算p中字符c在s[0:i]出现的次数preCnt[c][i]，然后枚举s的所有长度为len(p)的子数组s_ij,比较p中字符在s_ij和p中出现的次数是否相同
+from collections import defaultdict
+class Solution:
+    def findWord(self , s: str, p: str) -> List[int]:
+        # write code here
+        if len(s) < len(p): return []
+        ret = []
+        cnt_p = defaultdict(int)
+        preCnt = {}
+        for c in p: 
+            cnt_p[c] += 1
+            preCnt[c] = [0] * (len(s)+1)
+        for i in range(1, len(s)+1):
+            for c in preCnt:
+                if s[i-1] != c: preCnt[c][i] = preCnt[c][i-1]
+                else: preCnt[c][i] = preCnt[c][i-1]+1
+        for i in range(len(s)-len(p)+1):
+            flag = True
+            for c in cnt_p:
+                if preCnt[c][i+len(p)] - preCnt[c][i] != cnt_p[c]:
+                    flag = False
+                    break
+            if flag: ret.append(i)
+        return ret
+###################################################
+# 给定一个字符串 s ，请你去除字符串中重复的字母（剩下的字符串中每个字符仅出现一次），并在不改变其相对位置的情况下使剩下的字符串字典序最小。
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+# @param str string字符串 
+# @return string字符串
+#
+from collections import defaultdict
+class Solution:
+    def removeDuplicateLetters(self , str: str) -> str:
+        # write code here
+        cnt = defaultdict(int)
+        monoStk = []    #维护单调递增栈
+        for c in str:
+            cnt[c] += 1
+        for c in str:
+            #注意判断c是否已在栈中, 若在则说明c目前已在合适位置直接跳过
+            cnt[c] -= 1     #c在余下字符串中出现的次数
+            if c in monoStk: continue   
+            while monoStk and cnt[monoStk[-1]] and monoStk[-1] > c:
+            #栈顶弹出条件: 大于当前元素且后续有与之相同的元素来替代
+                monoStk.pop()
+            monoStk.append(c)
+        return ''.join(monoStk)
+###################################################
+# 给定一个长度为 n 的数组，请你返回任选两个数的最大异或值。
+#
+# 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+#
+# 
+# @param array int整型一维数组 
+# @return int整型
+#遍历数组, 利用字典树保存每个数的二进制表示
+#对于当前数a[i], 求其与已遍历的数的最大异或值, 即根据a[i]的二进制第j位确定我们应走向哪个子节点以继续遍历
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None    
+        self.right = None
+        self.prefix = 1
+class Trie:
+    def __init__(self, root):
+        self.root = Node(root)
+    def insert(self, x):    #按照二进制从高到低位将x加入字典树
+        p = self.root
+        i = 29  #根据题目范围二进制表示长度至多为30
+        while i >= 0:
+            bit = x >> i & 1
+            if bit == 0:
+                if not p.left: p.left = Node(0)
+                else: p.left.prefix += 1
+                p = p.left
+            else:
+                if not p.right: p.right = Node(1)
+                else: p.right.prefix += 1
+                p = p.right
+            i -= 1
+    def check(self, x):
+        p = self.root
+        i = 29
+        ret = 0
+        while i >= 0:
+            bit = x >> i & 1
+            if bit == 0:
+                if p.right:
+                    ret += 1 << i
+                    p = p.right
+                elif p.left: p = p.left
+            else:
+                if p.left:
+                    ret += 1 << i
+                    p = p.left
+                elif p.right: p = p.right
+            i -= 1
+        return ret
+        
+class Solution:
+    def maxXOR(self , array: List[int]) -> int:
+        # write code here
+        trie = Trie(0)  #字典树层级表示二进制位数，左右节点分别表示该位为0或1
+        ret = 0
+        for i in range(1, len(array)):
+            trie.insert(array[i-1])
+            ret = max(ret, trie.check(array[i]))
+        return ret
