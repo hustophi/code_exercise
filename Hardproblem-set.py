@@ -541,7 +541,7 @@ class Solution:
 # @param t string字符串 
 # @return int整型
 #
-#dp[i][j]为s的前i个字符包含t的前j个的子序列个数
+#dp[i][j]为s的前i个字符包含t的前j个字符的子序列个数
 class Solution:
     def countSubseq(self , s: str, t: str) -> int:
         # write code here
